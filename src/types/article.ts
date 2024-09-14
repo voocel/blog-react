@@ -13,6 +13,7 @@ export interface Article {
   isPublic: boolean;
   description: string;
   summary: string;
+  image: string;
   category: {
     id: number;
     name: string;

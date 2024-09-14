@@ -1,24 +1,13 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
-import Home from '../pages/blog/Home';
-import ArticlePage from '../pages/blog/ArticlePage';
-import CategoryPage from '../pages/blog/CategoryPage';
-import TagPage from '../pages/blog/TagPage';
+import styles from '../styles/Blog.module.css';
 
-const BlogLayout: React.FC = () => {
+const BlogLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="blog-layout">
+    <div className={styles.layout}>
       <Header />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/article/:id" element={<ArticlePage />} />
-          <Route path="/category/:categoryId" element={<CategoryPage />} />
-          <Route path="/tag/:tagName" element={<TagPage />} />
-        </Routes>
-      </main>
+      <main className={styles.main}>{children}</main>
       <Footer />
     </div>
   );

@@ -2,9 +2,66 @@ import { Article } from '../types/article';
 import api from './api';
 
 // 获取文章列表
-export const getArticles = async (page: number, pageSize: number): Promise<{ data: Article[], total: number }> => {
-  const response = await api.get<{ data: Article[], total: number }>('/articles', { params: { page, pageSize } });
-  return response;
+
+
+const mockArticles: Article[] = [
+  {
+    id: 1,
+    title: "ComfyUI入门指南",
+    summary: "ComfyUI使用教程",
+    image: "https://via.placeholder.com/150",
+    content: '',
+    tags: [],
+    author: '',
+    published: false,
+    publishTime: '',
+    isDraft: false,
+    isPublic: false,
+    description: '',
+    category: {
+      id: 0,
+      name: ''
+    }
+  },
+  {
+    id: 2,
+    title: "如何使用llama本地部署大语言模型",
+    summary: "Llama 2 本地部署教程",
+    image: "https://via.placeholder.com/150",
+    content: '',
+    tags: [],
+    author: '',
+    published: false,
+    publishTime: '',
+    isDraft: false,
+    isPublic: false,
+    description: '',
+    category: {
+      id: 0,
+      name: ''
+    }
+  },
+  // 添加更多模拟文章...
+];
+
+interface ArticlesResponse {
+  data: Article[];
+  total: number;
+}
+
+// 移除参数的类型注解，让 TypeScript 自动推断
+export const getArticles = async (page = 1, pageSize = 10): Promise<ArticlesResponse> => {
+  // 模拟API调用延迟
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedData = mockArticles.slice(startIndex, endIndex);
+
+  return {
+    data: paginatedData,
+    total: mockArticles.length
+  };
 };
 
 // 创建新文章
@@ -33,8 +90,8 @@ export const getArticle = async (id: number): Promise<Article> => {
 // 根据分类获取文章
 export const getArticlesByCategory = async (
   categoryId: number, 
-  page: number = 1, 
-  pageSize: number = 10
+  page = 1,
+  pageSize = 10
 ): Promise<{ data: Article[], total: number }> => {
   const response = await api.get<{ data: Article[], total: number }>(
     '/articles', 
@@ -46,8 +103,8 @@ export const getArticlesByCategory = async (
 // 根据标签获取文章
 export const getArticlesByTag = async (
   tag: string, 
-  page: number = 1, 
-  pageSize: number = 10
+  page = 1,
+  pageSize = 10
 ): Promise<{ data: Article[], total: number }> => {
   const response = await api.get<{ data: Article[], total: number }>(
     '/articles', 

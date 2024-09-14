@@ -1,42 +1,27 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Menu } from 'antd';
-import type { MenuProps } from 'antd';
-import { useAuth } from '../../contexts/AuthContext';  // 修改这一行
+import { Link } from 'react-router-dom';
+import styles from '../../styles/Header.module.css';
 
 const Header: React.FC = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
-  const items: MenuProps['items'] = [
-    {
-      key: 'home',
-      label: <Link to="/">首页</Link>,
-    },
-    user
-      ? [
-          {
-            key: 'dashboard',
-            label: <Link to="/admin/dashboard">仪表板</Link>,
-          },
-          {
-            key: 'logout',
-            label: '登出',
-            onClick: handleLogout,
-          },
-        ]
-      : {
-          key: 'login',
-          label: <Link to="/login">登录</Link>,
-        },
-  ].flat();
-
-  return <Menu mode="horizontal" items={items} />;
+  return (
+    <header className={styles.header}>
+      <div className={styles.headerTop}>
+        <div className={styles.logo}>voocel</div>
+        <nav className={styles.nav}>
+          <Link to="/">文章</Link>
+          <Link to="/tags">标签</Link>
+          {/* 添加其他导航链接 */}
+        </nav>
+        <div className={styles.userActions}>
+          {/* 添加用户头像和操作按钮 */}
+        </div>
+      </div>
+      <div className={styles.headerBanner}>
+        <h2>Nothing is impossible.</h2>
+        <p>https://voocel.com</p>
+      </div>
+    </header>
+  );
 };
 
 export default Header;

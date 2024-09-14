@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, message, Space } from 'antd';
+import { Table, Button, Space, Pagination, message } from 'antd';
 import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { getArticles, deleteArticle } from '../../services/articles';
@@ -9,29 +9,30 @@ import { TablePaginationConfig } from 'antd/lib/table';
 
 const ArticleManagement: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState<TablePaginationConfig>({
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
     total: 0,
   });
 
-  useEffect(() => {
-    fetchArticles();
-  }, [pagination.current, pagination.pageSize]);
-
   const fetchArticles = async () => {
     setLoading(true);
     try {
-      const { data, total } = await getArticles(pagination.current || 1, pagination.pageSize || 10);
+      const { data, total } = await getArticles(pagination.current, pagination.pageSize);
       setArticles(data);
       setPagination(prev => ({ ...prev, total }));
     } catch (error) {
+      console.error('Failed to fetch articles:', error);
       message.error('获取文章列表失败');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchArticles();
+  }, [pagination.current, pagination.pageSize]);
 
   const handleDelete = async (id: number) => {
     try {
@@ -39,6 +40,7 @@ const ArticleManagement: React.FC = () => {
       message.success('文章删除成功');
       fetchArticles();
     } catch (error) {
+      console.error('Failed to delete article:', error);
       message.error('文章删除失败');
     }
   };
@@ -92,14 +94,18 @@ const ArticleManagement: React.FC = () => {
         dataSource={articles}
         rowKey="id"
         loading={loading}
-        pagination={pagination}
-        onChange={(newPagination: TablePaginationConfig) => {
-          setPagination({
-            current: newPagination.current || 1,
-            pageSize: newPagination.pageSize || 10,
-            total: pagination.total, // 保持总数不变，因为它通常来自服务器响应
-          });
+        pagination={false}
+      />
+      <Pagination
+        current={pagination.current}
+        pageSize={pagination.pageSize}
+        total={pagination.total}
+        onChange={(page, pageSize) => {
+          setPagination(prev => ({ ...prev, current: page, pageSize: pageSize || 10 }));
         }}
+        showSizeChanger
+        showQuickJumper
+        showTotal={(total) => `共 ${total} 条`}
       />
     </div>
   );
