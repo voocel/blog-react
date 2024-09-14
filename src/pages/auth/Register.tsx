@@ -1,43 +1,93 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import styles from '../../styles/Auth.module.css';
+import { Link, useNavigate } from 'react-router-dom';
+import Header from '../../components/common/Header';
+import Footer from '../../components/common/Footer';
 
 const Register: React.FC = () => {
-  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const { register } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const onFinish = async (values: { username: string; email: string; password: string }) => {
-    setLoading(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      alert('密码不匹配');
+      return;
+    }
     try {
-      await register(values.username, values.email, values.password);
-      message.success('注册成功');
-      navigate('/login');
+      await register(email, password, username);
+      navigate('/'); // 注册成功后重定向到首页
     } catch (error) {
-      message.error('注册失败');
-    } finally {
-      setLoading(false);
+      console.error('注册失败:', error);
+      // 处理注册失败的情况
     }
   };
 
   return (
-    <Form onFinish={onFinish}>
-      <Form.Item name="username" rules={[{ required: true, message: '请输入用户名' }]} >
-        <Input placeholder="用户名" />
-      </Form.Item>
-      <Form.Item name="email" rules={[{ required: true, message: '请输入邮箱' }]} >
-        <Input placeholder="邮箱" />
-      </Form.Item>
-      <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }]} >
-        <Input.Password placeholder="密码" />
-      </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType="submit" loading={loading}>
-          注册
-        </Button>
-      </Form.Item>
-    </Form>
+    <>
+      <Header />
+      <div className={styles.authWrapper}>
+        <div className={styles.authContainer}>
+          <h2 className={styles.authTitle}>注册</h2>
+          <form onSubmit={handleSubmit} className={styles.authForm}>
+            <div className={styles.inputGroup}>
+              <label htmlFor="username">用户名</label>
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="请输入用户名"
+                required
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="email">邮箱地址</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="请输入邮箱"
+                required
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="password">密码</label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="请输入密码"
+                required
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label htmlFor="confirmPassword">确认密码</label>
+              <input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="请再次输入密码"
+                required
+              />
+            </div>
+            <button type="submit" className={styles.submitButton}>注册</button>
+          </form>
+          <div className={styles.switchAuth}>
+            您已有账号？ <Link to="/login">点击登录</Link>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
   );
 };
 

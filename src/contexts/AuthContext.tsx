@@ -1,53 +1,45 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { User } from '../types/user';
-import { login, register, logout, getCurrentUser } from '../services/auth';
+import { register as registerService } from '../services/auth';
 
 interface AuthContextType {
+  isAuthenticated: boolean;
   user: User | null;
-  loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  register: (username: string, email: string, password: string) => Promise<void>;
+  logout: () => void;
+  register: (email: string, password: string, username: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const currentUser = await getCurrentUser();
-        setUser(currentUser);
-      } catch (error) {
-        console.error('Failed to load user:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUser();
-  }, []);
-
-  const handleLogin = async (email: string, password: string) => {
-    const loggedInUser = await login(email, password);
-    setUser(loggedInUser);
+  const login = async (email: string, password: string) => {
+    // 实现登录逻辑
+    setIsAuthenticated(true);
+    // 设置用户信息
   };
 
-  const handleLogout = async () => {
-    await logout();
+  const logout = () => {
+    setIsAuthenticated(false);
     setUser(null);
   };
 
-  const handleRegister = async (username: string, email: string, password: string) => {
-    const newUser = await register(username, email, password);
-    setUser(newUser);
+  const register = async (email: string, password: string, username: string) => {
+    try {
+      const newUser = await registerService(email, password, username);
+      setUser(newUser);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error('注册失败:', error);
+      throw error;
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login: handleLogin, logout: handleLogout, register: handleRegister }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
