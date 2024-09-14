@@ -1,0 +1,41 @@
+.categoryPage {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.categoryPage h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.articleItem {
+  margin-bottom: 20px;
+}
+
+.articleTitle {
+  font-size: 18px;
+  color: #1890ff;
+  text-decoration: none;
+}
+
+.articleTitle:hover {
+  text-decoration: underline;
+}
+
+.articleMeta {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-bottom: 10px;
+}
+
+.articleSummary {
+  font-size: 16px;
+  color: #333;
+}
+
+.coverImage {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}

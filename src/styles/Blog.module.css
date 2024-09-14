@@ -1,0 +1,75 @@
+/* src/styles/Blog.module.css */
+.homePage {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  background-color: #4a5568;
+  color: white;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.banner h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.mainContent {
+  display: flex;
+  margin-top: 20px;
+}
+
+.articleList {
+  flex: 1;
+}
+
+.articleCard {
+  display: flex;
+  margin-bottom: 30px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.thumbnail {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.articleContent {
+  padding: 20px;
+  flex: 1;
+}
+
+.articleContent h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.articleMeta {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.tag {
+  background-color: #e2e8f0;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+.views, .comments {
+  margin-right: 15px;
+}
+
+.readMore {
+  display: inline-block;
+  margin-top: 10px;
+  color: #4299e1;
+  text-decoration: none;
+  font-weight: bold;
+}

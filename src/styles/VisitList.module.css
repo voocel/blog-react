@@ -1,0 +1,8 @@
+/* src/styles/VisitList.module.css */
+.visitList {
+  padding: 20px;
+}
+
+.visitList h1 {
+  margin-bottom: 20px;
+}

@@ -1,0 +1,18 @@
+.header {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .sider {
+    background: #fff;
+  }
+  
+  .content {
+    background: #fff;
+  }

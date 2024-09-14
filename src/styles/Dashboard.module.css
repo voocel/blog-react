@@ -1,0 +1,34 @@
+.dashboard {
+  padding: 20px;
+}
+
+.notice {
+  margin-bottom: 20px;
+}
+
+.statCard {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.statIcon {
+  font-size: 48px;
+  margin-right: 16px;
+  color: #1890ff;
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.statTitle {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+}

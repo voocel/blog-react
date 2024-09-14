@@ -1,0 +1,13 @@
+.createArticle {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .createArticle h1 {
+    margin-bottom: 20px;
+  }
+  
+  :global(.ql-container) {
+    min-height: 200px;
+  }
