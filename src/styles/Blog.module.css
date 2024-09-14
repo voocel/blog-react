@@ -23,7 +23,12 @@
 }
 
 .articleList {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .articleCard {
@@ -42,6 +47,9 @@
 .articleContent {
   padding: 20px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .articleContent h2 {
@@ -49,10 +57,21 @@
   margin-bottom: 10px;
 }
 
-.articleMeta {
-  margin-top: 10px;
-  font-size: 0.9rem;
+.articleContent h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.articleContent p {
   color: #666;
+  margin-bottom: 15px;
+  flex-grow: 1;
+}
+
+.articleMeta {
+  font-size: 0.9em;
+  color: #888;
+  margin-bottom: 15px;
 }
 
 .tag {
@@ -67,11 +86,15 @@
 }
 
 .readMore {
-  display: inline-block;
-  margin-top: 10px;
-  color: #4299e1;
+  align-self: flex-end;
+  color: #1890ff;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.readMore:hover {
+  color: #40a9ff;
 }
 
 .layout {
@@ -83,27 +106,29 @@
 .main {
   flex: 1;
   padding: 20px;
-  background-color: #f0f2f5;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .articleList {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
 }
 
 .articleItem {
+  display: flex;
   background-color: white;
   border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.articleItem img {
-  width: 100%;
+.articleImage {
+  width: 300px;
   height: 200px;
   object-fit: cover;
-  border-radius: 4px;
 }
 
 .articleItem h3 {

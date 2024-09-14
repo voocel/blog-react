@@ -4,7 +4,9 @@ import styles from '../../styles/Footer.module.css';
 const Footer: React.FC = () => {
   return (
     <footer className={styles.footer}>
-      <p>&copy; 2023 voocel. All rights reserved.</p>
+      <div className={styles.footerContent}>
+        <p>&copy; 2023 voocel. All rights reserved.</p>
+      </div>
     </footer>
   );
 };
