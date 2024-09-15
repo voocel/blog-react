@@ -8,7 +8,7 @@ const { Content } = Layout;
 
 const AdminLayout: React.FC = () => {
   return (
-    <Layout className={styles.adminLayout}>
+    <Layout className={`${styles.adminLayout} admin-layout`}>
       <Sidebar />
       <Layout className={styles.mainLayout}>
         <Content className={styles.content}>

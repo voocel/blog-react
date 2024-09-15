@@ -3,7 +3,6 @@ import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import {
   HomeOutlined,
-  DashboardOutlined,
   UserOutlined,
   FileTextOutlined,
   CommentOutlined,
@@ -15,13 +14,9 @@ import {
 } from '@ant-design/icons';
 import styles from '../../styles/Sidebar.module.css';
 
-interface SidebarProps {
-  className?: string;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({ className }) => {
+const Sidebar: React.FC = () => {
   return (
-    <div className={`${styles.sidebar} ${className || ''}`}>
+    <div className={styles.sidebar}>
       <div className={styles.userInfo}>
         <img src="/path-to-avatar.jpg" alt="User Avatar" className={styles.avatar} />
         <div className={styles.userName}>voocel</div>
@@ -33,7 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
         <a href="#"><SettingOutlined /></a>
       </div>
       <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-        <Menu.Item key="1" icon={<DashboardOutlined />}>
+        <Menu.Item key="1" icon={<HomeOutlined />}>
           <Link to="/admin">面板</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<UserOutlined />}>

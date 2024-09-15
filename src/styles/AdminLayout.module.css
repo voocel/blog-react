@@ -14,8 +14,9 @@
   }
   
   .content {
+    margin: 24px;
     padding: 24px;
-    background: #f0f2f5;
+    background: #fff;
     min-height: calc(100vh - 48px);
   }
   
@@ -32,7 +33,8 @@
   }
   
   .mainLayout {
-    margin-left: 200px;
+    margin-left: 220px; /* 调整为与侧边栏宽度相同 */
+    background-color: #f0f2f5;
   }
   
   .mainContent {
@@ -42,3 +44,23 @@
     min-height: 100vh;
     padding: 24px;
   }
+
+:global(body) {
+  background-color: #f0f2f5;
+}
+
+:global(.ant-layout) {
+  background-color: #f0f2f5;
+}
+
+/* 其他样式保持不变 */
+
+:global(.admin-layout .ant-menu.ant-menu-dark),
+:global(.admin-layout .ant-menu-dark .ant-menu-sub),
+:global(.admin-layout .ant-menu.ant-menu-dark .ant-menu-sub) {
+  background-color: #3c4b64;
+}
+
+:global(.admin-layout .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected) {
+  background-color: #2e384b;
+}

@@ -12,18 +12,15 @@
 }
 
 .header {
+  background-color: #fff;
+  padding: 16px 24px;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  margin-bottom: 24px;
 }
 
-.menuButton {
-  display: none; /* 隐藏菜单按钮，因为我们已经有了固定的侧边栏 */
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
+.menuIcon {
+  font-size: 20px;
+  color: #3c4b64;
 }
 
 .userInfo {
@@ -42,6 +39,9 @@
   background-color: #fff;
   padding: 12px 24px;
   margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-left: 4px solid #ffc107;
 }
 
@@ -60,6 +60,7 @@
 
 .dashboard {
   padding: 24px;
+  background-color: #f0f2f5;
 }
 
 .notice {
@@ -70,9 +71,7 @@
 }
 
 .statCard {
-  display: flex;
-  align-items: center;
-  position: relative;
+  height: 100%;
 }
 
 .statCard :global(.ant-card-body) {
@@ -81,7 +80,7 @@
   height: 100%;
 }
 
-.statIcon {
+.statCard :global(.anticon) {
   font-size: 24px;
   margin-right: 16px;
   color: #321fdb;
@@ -91,14 +90,14 @@
   flex: 1;
 }
 
-.statTitle {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.45);
-}
-
 .statValue {
   font-size: 24px;
   font-weight: bold;
+}
+
+.statTitle {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .statBadge {
@@ -109,5 +108,15 @@
   color: white;
   padding: 2px 8px;
   font-size: 12px;
-  border-radius: 0 0 0 8px;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 8px;
+}
+
+.admin {
+  background-color: #ffc107; /* 改为黄色 */
+  color: #ffffff; /* 改为黑色，以确保在黄色背景上可读 */
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
 }

@@ -1,11 +1,12 @@
 .sidebar {
-  width: 200px;
+  width: 220px; /* 增加宽度 */
   height: 100vh;
   background-color: #3c4b64;
   color: white;
   position: fixed;
   left: 0;
   top: 0;
+  overflow-y: auto;
 }
 
 .logo {
@@ -77,10 +78,24 @@
   font-size: 18px;
 }
 
-:global(.ant-menu.ant-menu-dark) {
+/* 统一菜单背景色 */
+:global(.ant-menu.ant-menu-dark),
+:global(.ant-menu-dark .ant-menu-sub),
+:global(.ant-menu.ant-menu-dark .ant-menu-sub) {
   background-color: #3c4b64;
 }
 
-:global(.ant-menu-dark .ant-menu-item-selected) {
+/* 选中菜单项的背景色 */
+:global(.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected) {
   background-color: #321fdb;
+}
+
+/* 鼠标悬停时的背景色 */
+:global(.ant-menu-dark .ant-menu-item:hover),
+:global(.ant-menu-dark .ant-menu-item-active),
+:global(.ant-menu-dark .ant-menu-submenu-active),
+:global(.ant-menu-dark .ant-menu-submenu-open),
+:global(.ant-menu-dark .ant-menu-submenu-selected),
+:global(.ant-menu-dark .ant-menu-submenu-title:hover) {
+  background-color: rgba(255, 255, 255, 0.1);
 }

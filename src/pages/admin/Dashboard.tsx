@@ -1,13 +1,17 @@
 import React from 'react';
 import { Row, Col, Card } from 'antd';
-import { UserOutlined, EyeOutlined, FileTextOutlined, CommentOutlined } from '@ant-design/icons';
+import { UserOutlined, EyeOutlined, FileTextOutlined, CommentOutlined, MenuOutlined } from '@ant-design/icons';
 import styles from '../../styles/Dashboard.module.css';
 
 const Dashboard: React.FC = () => {
   return (
     <div className={styles.dashboard}>
+      <div className={styles.header}>
+        <MenuOutlined className={styles.menuIcon} />
+      </div>
       <div className={styles.noticeBar}>
-        Notice For Everyone.
+        <span>Notice For Everyone.</span>
+        <span className={styles.admin}>管理员</span>
       </div>
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} md={6}>
@@ -29,7 +33,7 @@ const Dashboard: React.FC = () => {
 
 const StatCard: React.FC<{ icon: React.ReactNode; title: string; value: number }> = ({ icon, title, value }) => (
   <Card className={styles.statCard}>
-    <div className={styles.statIcon}>{icon}</div>
+    {icon}
     <div className={styles.statInfo}>
       <div className={styles.statValue}>{value}</div>
       <div className={styles.statTitle}>{title}</div>
