@@ -1,14 +1,7 @@
-.dashboardContainer {
-  padding: 24px;
+.dashboard {
   display: flex;
-  height: 100vh;
-}
-
-.mainContent {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #f0f2f5;
-  margin-left: 200px; /* 调整这个值以匹配侧边栏的宽度 */
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .header {
@@ -16,6 +9,7 @@
   padding: 16px 24px;
   display: flex;
   align-items: center;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .menuIcon {
@@ -23,16 +17,10 @@
   color: #3c4b64;
 }
 
-.userInfo {
-  display: flex;
-  align-items: center;
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  margin-right: 8px;
+.content {
+  flex: 1;
+  background-color: #f0f2f5;
+  padding: 24px;
 }
 
 .noticeBar {
@@ -45,45 +33,30 @@
   border-left: 4px solid #ffc107;
 }
 
-.editButton {
-  background: none;
-  border: none;
-  color: #321fdb;
-  cursor: pointer;
-}
-
-.statsContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
-}
-
-.dashboard {
-  padding: 24px;
-  background-color: #f0f2f5;
-}
-
-.notice {
-  background-color: #fff;
-  padding: 12px 24px;
-  margin-bottom: 24px;
-  border-left: 4px solid #1890ff;
+.admin {
+  background-color: #ffc107;
+  color: #000;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .statCard {
   height: 100%;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
 }
 
 .statCard :global(.ant-card-body) {
   display: flex;
   align-items: center;
-  height: 100%;
+  padding: 20px;
+  position: relative;
 }
 
-.statCard :global(.anticon) {
+.statIcon {
   font-size: 24px;
-  margin-right: 16px;
   color: #321fdb;
+  margin-right: 16px;
 }
 
 .statInfo {
@@ -93,11 +66,14 @@
 .statValue {
   font-size: 24px;
   font-weight: bold;
+  color: #321fdb;
+  line-height: 1;
 }
 
 .statTitle {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.45);
+  margin-top: 4px;
 }
 
 .statBadge {
@@ -108,15 +84,8 @@
   color: white;
   padding: 2px 8px;
   font-size: 12px;
-  border-top-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 8px;
+  border-top-right-radius: 4px;
+  border-bottom-left-radius: 4px;
 }
 
-.admin {
-  background-color: #ffc107; /* 改为黄色 */
-  color: #ffffff; /* 改为黑色，以确保在黄色背景上可读 */
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-}
+/* 其他 StatCard 相关样式保持不变 */

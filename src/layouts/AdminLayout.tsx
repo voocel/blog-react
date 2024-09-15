@@ -11,7 +11,7 @@ const AdminLayout: React.FC = () => {
     <Layout className={`${styles.adminLayout} admin-layout`}>
       <Sidebar />
       <Layout className={styles.mainLayout}>
-        <Content className={styles.content}>
+        <Content>
           <Outlet />
         </Content>
       </Layout>
