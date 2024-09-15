@@ -14,5 +14,31 @@
   }
   
   .content {
-    background: #fff;
+    padding: 24px;
+    background: #f0f2f5;
+    min-height: calc(100vh - 48px);
+  }
+  
+  .adminLayout {
+    min-height: 100vh;
+  }
+  
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+  }
+  
+  .mainLayout {
+    margin-left: 200px;
+  }
+  
+  .mainContent {
+    flex: 1;
+    margin-left: 200px; /* 与侧边栏宽度相同 */
+    background-color: #f0f2f5;
+    min-height: 100vh;
+    padding: 24px;
   }

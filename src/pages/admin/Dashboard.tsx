@@ -1,55 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import React from 'react';
+import { Row, Col, Card } from 'antd';
+import { UserOutlined, EyeOutlined, FileTextOutlined, CommentOutlined } from '@ant-design/icons';
 import styles from '../../styles/Dashboard.module.css';
-import StatCard from '../../components/StatCard';
-import Sidebar from '../../components/common/Sidebar';
-import { getDashboardStats, DashboardStats } from '../../services/dashboard';
 
 const Dashboard: React.FC = () => {
-  const { user } = useAuth();
-  const [stats, setStats] = useState<DashboardStats>({
-    userCount: 0,
-    totalArticles: 0,
-    totalComments: 0,
-    totalViews: 0
-  });
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const dashboardStats = await getDashboardStats();
-        setStats(dashboardStats);
-      } catch (error) {
-        console.error('Failed to fetch dashboard stats:', error);
-      }
-    };
-    fetchStats();
-  }, []);
-
   return (
-    <div className={styles.dashboardContainer}>
-      <Sidebar />
-      <div className={styles.mainContent}>
-        <header className={styles.header}>
-          <button className={styles.menuButton}>☰</button>
-          <div className={styles.userInfo}>
-            <img src={user?.avatar} alt={user?.username} className={styles.avatar} />
-            <span>{user?.username}</span>
-          </div>
-        </header>
-        <div className={styles.noticeBar}>
-          <span>Notice For Everyone.</span>
-          <button className={styles.editButton}>编辑</button>
-        </div>
-        <div className={styles.statsContainer}>
-          <StatCard title="用户数" value={stats.userCount} icon="👥" />
-          <StatCard title="访问数" value={stats.totalViews} icon="👁️" />
-          <StatCard title="文章数" value={stats.totalArticles} icon="📄" />
-          <StatCard title="评论数" value={stats.totalComments} icon="💬" />
-        </div>
+    <div className={styles.dashboard}>
+      <div className={styles.noticeBar}>
+        Notice For Everyone.
       </div>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={12} md={6}>
+          <StatCard icon={<UserOutlined />} title="用户数" value={4670} />
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <StatCard icon={<EyeOutlined />} title="访问数" value={61329} />
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <StatCard icon={<FileTextOutlined />} title="文章数" value={31} />
+        </Col>
+        <Col xs={24} sm={12} md={6}>
+          <StatCard icon={<CommentOutlined />} title="评论数" value={2} />
+        </Col>
+      </Row>
     </div>
   );
 };
+
+const StatCard: React.FC<{ icon: React.ReactNode; title: string; value: number }> = ({ icon, title, value }) => (
+  <Card className={styles.statCard}>
+    <div className={styles.statIcon}>{icon}</div>
+    <div className={styles.statInfo}>
+      <div className={styles.statValue}>{value}</div>
+      <div className={styles.statTitle}>{title}</div>
+    </div>
+    <div className={styles.statBadge}>全部</div>
+  </Card>
+);
 
 export default Dashboard;

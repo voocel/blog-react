@@ -1,4 +1,5 @@
 .dashboardContainer {
+  padding: 24px;
   display: flex;
   height: 100vh;
 }
@@ -7,16 +8,18 @@
   flex-grow: 1;
   padding: 20px;
   background-color: #f0f2f5;
+  margin-left: 200px; /* 调整这个值以匹配侧边栏的宽度 */
 }
 
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .menuButton {
+  display: none; /* 隐藏菜单按钮，因为我们已经有了固定的侧边栏 */
   background: none;
   border: none;
   font-size: 24px;
@@ -29,32 +32,82 @@
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 .noticeBar {
   background-color: #fff;
-  padding: 10px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-left: 4px solid #ffd700;
+  padding: 12px 24px;
+  margin-bottom: 24px;
+  border-left: 4px solid #ffc107;
 }
 
 .editButton {
-  background-color: #1890ff;
-  color: white;
+  background: none;
   border: none;
-  padding: 5px 10px;
+  color: #321fdb;
   cursor: pointer;
 }
 
 .statsContainer {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.dashboard {
+  padding: 24px;
+}
+
+.notice {
+  background-color: #fff;
+  padding: 12px 24px;
+  margin-bottom: 24px;
+  border-left: 4px solid #1890ff;
+}
+
+.statCard {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.statCard :global(.ant-card-body) {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.statIcon {
+  font-size: 24px;
+  margin-right: 16px;
+  color: #321fdb;
+}
+
+.statInfo {
+  flex: 1;
+}
+
+.statTitle {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.statBadge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #20c997;
+  color: white;
+  padding: 2px 8px;
+  font-size: 12px;
+  border-radius: 0 0 0 8px;
 }

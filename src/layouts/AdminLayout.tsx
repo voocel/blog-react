@@ -1,15 +1,21 @@
 import React from 'react';
+import { Layout } from 'antd';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../components/common/Sidebar'; 
+import Sidebar from '../components/common/Sidebar';
+import styles from '../styles/AdminLayout.module.css';
+
+const { Content } = Layout;
 
 const AdminLayout: React.FC = () => {
   return (
-    <div className="admin-layout">
+    <Layout className={styles.adminLayout}>
       <Sidebar />
-      <main>
-        <Outlet />
-      </main>
-    </div>
+      <Layout className={styles.mainLayout}>
+        <Content className={styles.content}>
+          <Outlet />
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 

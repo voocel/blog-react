@@ -1,8 +1,32 @@
 .sidebar {
-  /* 添加侧边栏的样式 */
-  width: 250px;
-  background-color: #f0f0f0;
-  padding: 20px;
+  width: 200px;
+  height: 100vh;
+  background-color: #3c4b64;
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.logo {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.logo img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.logo span {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .sidebarNav {
@@ -17,4 +41,46 @@
 .sidebarNav a {
   text-decoration: none;
   color: #333;
+}
+
+.userInfo {
+  padding: 20px;
+  text-align: center;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.userName {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.userEmail {
+  font-size: 14px;
+  color: #a0aec0;
+}
+
+.userLinks {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.userLinks a {
+  color: white;
+  margin: 0 10px;
+  font-size: 18px;
+}
+
+:global(.ant-menu.ant-menu-dark) {
+  background-color: #3c4b64;
+}
+
+:global(.ant-menu-dark .ant-menu-item-selected) {
+  background-color: #321fdb;
 }

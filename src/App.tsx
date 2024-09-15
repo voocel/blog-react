@@ -2,21 +2,26 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import AdminLayout from './layouts/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
-import PrivateRoute from './components/PrivateRoute';
+import Home from './pages/blog/Home';
 import Login from './pages/auth/Login';
-import Home from './pages/blog/Home';  // 假设你有一个主页组件
+import Register from './pages/auth/Register';
+import PrivateRoute from './components/PrivateRoute';
 
 const App: React.FC = () => {
   return (
     <Routes>
+      {/* 博客首页路由 */}
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/admin" element={<PrivateRoute><AdminLayout /></PrivateRoute>}>
-        <Route index element={<Dashboard />} />
-        {/* 其他管理页面路由 */}
+      <Route path="/register" element={<Register />} />
+
+      {/* 管理后台路由 */}
+      <Route path="/admin" element={<PrivateRoute />}>
+        <Route element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          {/* 在这里添加其他管理后台页面的路由 */}
+        </Route>
       </Route>
-      {/* 添加一个捕获所有的路由，用于处理 404 情况 */}
-      <Route path="*" element={<div>404 Not Found</div>} />
     </Routes>
   );
 };
