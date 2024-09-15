@@ -35,10 +35,10 @@ const Dashboard: React.FC = () => {
 
 const StatCard: React.FC<{ icon: React.ReactNode; title: string; value: number }> = ({ icon, title, value }) => (
   <Card className={styles.statCard}>
-    <div className={styles.statIcon}>{icon}</div>
-    <div className={styles.statInfo}>
+    <div className={styles.statHeader}>{title}</div>
+    <div className={styles.statContent}>
+      <div className={styles.statIcon}>{icon}</div>
       <div className={styles.statValue}>{value}</div>
-      <div className={styles.statTitle}>{title}</div>
     </div>
     <div className={styles.statBadge}>全部</div>
   </Card>
