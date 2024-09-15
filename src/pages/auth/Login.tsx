@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from '../../styles/Auth.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
 
@@ -10,15 +10,16 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await login(email, password);
-      // 登录成功后的处理，比如重定向到首页
+      navigate('/'); // 登录成功后重定向到首页
     } catch (error) {
       console.error('登录失败:', error);
-      // 处理登录失败的情况
+      alert('登录失败，请检查您的邮箱和密码');
     }
   };
 
@@ -27,7 +28,7 @@ const Login: React.FC = () => {
       <Header />
       <div className={styles.authWrapper}>
         <div className={styles.authContainer}>
-          <h2>登录</h2>
+          <h2 className={styles.authTitle}>登录</h2>
           <form onSubmit={handleSubmit} className={styles.authForm}>
             <div className={styles.inputGroup}>
               <label htmlFor="email">邮箱地址</label>
@@ -64,6 +65,9 @@ const Login: React.FC = () => {
           </form>
           <div className={styles.forgotPassword}>
             <Link to="/forgot-password">忘记密码?</Link>
+          </div>
+          <div className={styles.switchAuth}>
+            没有账号？ <Link to="/register">立即注册</Link>
           </div>
         </div>
       </div>

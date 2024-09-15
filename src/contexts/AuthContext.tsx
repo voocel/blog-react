@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '../types/user';
-import { register as registerService } from '../services/auth';
+import { login as loginService, register as registerService } from '../services/auth';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -13,18 +13,44 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return localStorage.getItem('isAuthenticated') === 'true';
+  });
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  console.log('AuthProvider: isAuthenticated =', isAuthenticated, 'user =', user); // 添加这行来调试
+
+  useEffect(() => {
+    localStorage.setItem('isAuthenticated', isAuthenticated.toString());
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [isAuthenticated, user]);
 
   const login = async (email: string, password: string) => {
-    // 实现登录逻辑
-    setIsAuthenticated(true);
-    // 设置用户信息
+    try {
+      const loggedInUser = await loginService(email, password);
+      setUser(loggedInUser);
+      setIsAuthenticated(true);
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('user', JSON.stringify(loggedInUser));
+      console.log('Login successful:', loggedInUser); // 添加这行来调试
+    } catch (error) {
+      console.error('登录失败:', error);
+      throw error;
+    }
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setUser(null);
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('user');
   };
 
   const register = async (email: string, password: string, username: string) => {

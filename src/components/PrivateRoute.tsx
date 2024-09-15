@@ -1,20 +1,17 @@
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-interface PrivateRouteProps {
-  children: React.ReactNode;
-}
+const PrivateRoute: React.FC = () => {
+  const { isAuthenticated, user } = useAuth();
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const { user } = useAuth();
-  const location = useLocation();
+  console.log('PrivateRoute: isAuthenticated =', isAuthenticated, 'user =', user); // 添加这行来调试
 
-  if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!isAuthenticated || !user || user.role !== 1) {
+    return <Navigate to="/login" replace />;
   }
 
-  return <>{children}</>;
+  return <Outlet />;
 };
 
 export default PrivateRoute;

@@ -1,18 +1,29 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import Home from './pages/blog/Home';
-import Login from './pages/auth/Login';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Dashboard from './pages/admin/Dashboard';
-// 导入其他需要的页面组件
+import AdminLayout from './layouts/AdminLayout';
+import PrivateRoute from './components/PrivateRoute';
+import UserManagement from './pages/admin/UserManagement';
+import ArticleManagement from './pages/admin/ArticleManagement';
+
+// 导入其他需要的组件
 
 const AppRoutes: React.FC = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/admin/dashboard" element={<Dashboard />} />
-      {/* 添加其他路由 */}
-    </Routes>
+    <Router>
+      <Routes>
+        {/* 其他路由 */}
+        <Route path="/admin" element={
+          <PrivateRoute>
+            <AdminLayout />
+          </PrivateRoute>
+        }>
+          <Route index element={<Dashboard />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="articles" element={<ArticleManagement />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 };
 

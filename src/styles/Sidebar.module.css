@@ -1,0 +1,20 @@
+.sidebar {
+  /* 添加侧边栏的样式 */
+  width: 250px;
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+
+.sidebarNav {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebarNav li {
+  margin-bottom: 10px;
+}
+
+.sidebarNav a {
+  text-decoration: none;
+  color: #333;
+}

@@ -1,50 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { Row, Col, Spin } from 'antd';
-import { UserOutlined, EyeOutlined, FileTextOutlined, CommentOutlined } from '@ant-design/icons';
-import { getDashboardStats, DashboardStats } from '../../services/dashboard';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import styles from '../../styles/Dashboard.module.css';
 import StatCard from '../../components/StatCard';
+import Sidebar from '../../components/common/Sidebar';
+import { getDashboardStats, DashboardStats } from '../../services/dashboard';
 
 const Dashboard: React.FC = () => {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const [stats, setStats] = useState<DashboardStats>({
+    userCount: 0,
+    totalArticles: 0,
+    totalComments: 0,
+    totalViews: 0
+  });
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const data = await getDashboardStats();
-        setStats(data);
+        const dashboardStats = await getDashboardStats();
+        setStats(dashboardStats);
       } catch (error) {
         console.error('Failed to fetch dashboard stats:', error);
-      } finally {
-        setLoading(false);
       }
     };
-
     fetchStats();
   }, []);
 
-  if (loading) {
-    return <Spin size="large" />;
-  }
-
   return (
-    <div>
-      <h1>仪表板</h1>
-      <Row gutter={[16, 16]}>
-        <Col xs={24} sm={12} md={6}>
-          <StatCard title="用户数" value={stats?.userCount || 0} icon={<UserOutlined />} />
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <StatCard title="访问数" value={stats?.viewCount || 0} icon={<EyeOutlined />} />
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <StatCard title="文章数" value={stats?.articleCount || 0} icon={<FileTextOutlined />} />
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <StatCard title="评论数" value={stats?.commentCount || 0} icon={<CommentOutlined />} />
-        </Col>
-      </Row>
-      {/* 可以添加更多的统计信息或图表 */}
+    <div className={styles.dashboardContainer}>
+      <Sidebar />
+      <div className={styles.mainContent}>
+        <header className={styles.header}>
+          <button className={styles.menuButton}>☰</button>
+          <div className={styles.userInfo}>
+            <img src={user?.avatar} alt={user?.username} className={styles.avatar} />
+            <span>{user?.username}</span>
+          </div>
+        </header>
+        <div className={styles.noticeBar}>
+          <span>Notice For Everyone.</span>
+          <button className={styles.editButton}>编辑</button>
+        </div>
+        <div className={styles.statsContainer}>
+          <StatCard title="用户数" value={stats.userCount} icon="👥" />
+          <StatCard title="访问数" value={stats.totalViews} icon="👁️" />
+          <StatCard title="文章数" value={stats.totalArticles} icon="📄" />
+          <StatCard title="评论数" value={stats.totalComments} icon="💬" />
+        </div>
+      </div>
     </div>
   );
 };

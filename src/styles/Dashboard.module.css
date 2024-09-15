@@ -1,34 +1,60 @@
-.dashboard {
-  padding: 20px;
+.dashboardContainer {
+  display: flex;
+  height: 100vh;
 }
 
-.notice {
+.mainContent {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #f0f2f5;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-.statCard {
+.menuButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.userInfo {
   display: flex;
   align-items: center;
-  height: 100%;
 }
 
-.statIcon {
-  font-size: 48px;
-  margin-right: 16px;
-  color: #1890ff;
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
-.statContent {
+.noticeBar {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 20px;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid #ffd700;
 }
 
-.statValue {
-  font-size: 24px;
-  font-weight: bold;
+.editButton {
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
 }
 
-.statTitle {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.45);
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }

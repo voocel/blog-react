@@ -1,25 +1,22 @@
 import React from 'react';
-import { Card, Statistic } from 'antd';
-import { StatisticProps } from 'antd/es/statistic/Statistic';
+import styles from '../styles/StatCard.module.css';
 
-interface StatCardProps extends Omit<StatisticProps, 'title'> {
-  title: React.ReactNode;
-  icon?: React.ReactNode;
+interface StatCardProps {
+  title: string;
+  value: number;
+  icon: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, icon, ...rest }) => (
-  <Card>
-    <Statistic
-      title={
-        <span>
-          {icon && <span style={{ marginRight: 8 }}>{icon}</span>}
-          {title}
-        </span>
-      }
-      value={value}
-      {...rest}
-    />
-  </Card>
-);
+const StatCard: React.FC<StatCardProps> = ({ title, value, icon }) => {
+  return (
+    <div className={styles.statCard}>
+      <div className={styles.icon}>{icon}</div>
+      <div className={styles.content}>
+        <h3>{title}</h3>
+        <p>{value}</p>
+      </div>
+    </div>
+  );
+};
 
 export default StatCard;
