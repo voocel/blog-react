@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, message, Switch, Avatar } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Table, Button, Modal, message, Switch, Avatar, Popconfirm } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getUsers, deleteUser, updateUserStatus } from '../../services/users';
 import { User } from '../../types/user';
 import styles from '../../styles/UserManagement.module.css';
 import { Link } from 'react-router-dom';
 import { TablePaginationConfig } from 'antd/es/table';
+import { useNavigate } from 'react-router-dom';
 
 const UserManagement: React.FC = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
@@ -52,6 +54,10 @@ const UserManagement: React.FC = () => {
       console.error('Failed to update user status:', error);
       message.error('更新用户状态失败');
     }
+  };
+
+  const handleCreateUser = () => {
+    navigate('/admin/users/create');
   };
 
   const columns = [
@@ -117,9 +123,14 @@ const UserManagement: React.FC = () => {
     <div className={styles.userManagement}>
       <div className={styles.header}>
         <h1>用户列表</h1>
-        <Link to="/admin/users/create">
-          <Button type="primary">创建</Button>
-        </Link>
+        <Button 
+          type="primary" 
+          icon={<PlusOutlined />} 
+          onClick={handleCreateUser}
+          style={{ marginBottom: 16 }}
+        >
+          创建用户
+        </Button>
       </div>
       <Table
         columns={columns}

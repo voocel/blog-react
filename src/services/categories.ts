@@ -10,7 +10,7 @@ interface CategoryResponse {
   data: Category;
 }
 
-export const getCategories = async (page: number = 1, pageSize: number = 10): Promise<CategoriesResponse> => {
+export const getCategories = (page = 1, pageSize = 10) => {
   return api.get<CategoriesResponse>('/categories', { params: { page, pageSize } });
 };
 

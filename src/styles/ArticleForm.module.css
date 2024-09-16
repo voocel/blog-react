@@ -33,10 +33,11 @@
 
 .imageInput {
     flex: 1;
-    margin-right: 8px;
+    margin-right: 16px;
 }
 
 .uploadButton {
+    flex-shrink: 0;
     background-color: #1890ff;
     color: #fff;
     border: none;
@@ -88,3 +89,14 @@
 :global(.ant-form-item-control-input-content .ant-upload-list-item) {
     margin-top: 8px;
 }
+
+.articleFormContainer {
+    padding: 24px;
+    background-color: #fff;
+}
+
+.form {
+    max-width: 800px;
+}
+
+/* 其他样式保持不变 */

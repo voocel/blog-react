@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, message, Space } from 'antd';
-import { getLinks, createLink, updateLink, deleteLink } from '../../services/links';
-import { LinkItem } from '../../types/link';
-import { Link } from 'react-router-dom';
+import { Table, Button, message, Space } from 'antd';  // 添加 Space 导入
+import { useNavigate } from 'react-router-dom';
+import { getLinks, deleteLink } from '../../services/links';  // 确保已经创建了这些函数
+import { LinkItem } from '../../types/link';  // 确保已经定义了这个类型
 import { TablePaginationConfig } from 'antd/es/table';
 import { ColumnsType } from 'antd/es/table';
 import styles from '../../styles/LinkManagement.module.css';
+import { useSidebar } from '../../contexts/SidebarContext';
+
+interface ContextType {
+  collapsed: boolean;
+  toggle: () => void;
+}
 
 const LinkManagement: React.FC = () => {
+  const navigate = useNavigate();
+  const { collapsed, toggleSidebar } = useSidebar();
   const [links, setLinks] = useState<LinkItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingLink, setEditingLink] = useState<LinkItem | null>(null);
-  const [form] = Form.useForm();
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
     pageSize: 10,
@@ -38,61 +43,59 @@ const LinkManagement: React.FC = () => {
 
   const columns: ColumnsType<LinkItem> = [
     {
-      title: '名称',
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: '图片',
+      dataIndex: 'image',
+      key: 'image',
+      render: (text: string) => <img src={text} alt="链接图片" className={styles.linkImage} />,
+    },
+    {
+      title: '名字',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'URL',
+      title: '链接',
       dataIndex: 'url',
       key: 'url',
     },
-    // ... 其他列
+    {
+      title: '显示顺序',
+      dataIndex: 'order',
+      key: 'order',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+    },
     {
       title: '操作',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <Button onClick={() => handleEdit(record)}>编辑</Button>
-          <Button onClick={() => handleDelete(record.id)}>删除</Button>
+          <Button type="link" onClick={() => handleEdit(record.id)}>编辑</Button>
+          <Button type="link" danger onClick={() => handleDelete(record.id)}>删除</Button>
         </Space>
       ),
     },
   ];
 
-  const handleEdit = (record: LinkItem) => {
-    setEditingLink(record);
-    setIsModalVisible(true);
+  const handleEdit = (id: number) => {
+    navigate(`/admin/links/edit/${id}`);
   };
 
   const handleDelete = async (id: number) => {
     try {
       await deleteLink(id);
       message.success('友链删除成功');
-      fetchLinks(); // 重新获取友链列表
+      fetchLinks();
     } catch (error) {
       message.error('删除友链失败');
-    }
-  };
-
-  const handleOk = async () => {
-    try {
-      const values = await form.validateFields();
-      if (editingLink) {
-        // 更新现有友链
-        await updateLink(editingLink.id, values);
-        message.success('友链更新成功');
-      } else {
-        // 创建新友链
-        await createLink(values);
-        message.success('友链创建成功');
-      }
-      setIsModalVisible(false);
-      setEditingLink(null);
-      form.resetFields();
-      fetchLinks(); // 重新获取友链列表
-    } catch (error) {
-      message.error('操作失败');
     }
   };
 
@@ -104,13 +107,15 @@ const LinkManagement: React.FC = () => {
     });
   };
 
+  const handleCreate = () => {
+    navigate('/admin/links/create');
+  };
+
   return (
     <div className={styles.linkManagement}>
-      <div className={styles.header}>
+      <div className={styles.pageHeader}>
         <h1>友链列表</h1>
-        <Link to="/admin/links/create">
-          <Button type="primary">创建</Button>
-        </Link>
+        <Button type="primary" onClick={handleCreate}>创建</Button>
       </div>
       <Table
         columns={columns}
@@ -120,17 +125,6 @@ const LinkManagement: React.FC = () => {
         pagination={pagination}
         onChange={handleTableChange}
       />
-      <Modal
-        title={editingLink ? "编辑友链" : "创建友链"}
-        visible={isModalVisible}
-        onOk={handleOk}
-        onCancel={() => {
-          setIsModalVisible(false);
-          setEditingLink(null);
-        }}
-      >
-        {/* ... 表单内容保持不变 ... */}
-      </Modal>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Menu } from 'antd';
-import { Link } from 'react-router-dom';
+import { Layout, Menu } from 'antd';
+import { Link, useLocation } from 'react-router-dom';
 import {
   HomeOutlined,
   UserOutlined,
@@ -14,16 +14,41 @@ import {
 } from '@ant-design/icons';
 import styles from '../../styles/Sidebar.module.css';
 
-const Sidebar: React.FC = () => {
+const { Sider } = Layout;
+
+interface SidebarProps {
+  collapsed: boolean;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ collapsed }) => {
+  const location = useLocation();
+
+  const handleHomeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log('Home icon clicked'); // 调试日志
+    window.location.href = '/';
+  };
+
   return (
-    <div className={styles.sidebar}>
+    <Sider 
+      width={240}
+      collapsedWidth={80} 
+      collapsed={collapsed} 
+      className={`${styles.sidebar} custom-sidebar`}
+      trigger={null}
+    >
+      {/* 移除这里多余的 logo div */}
       <div className={styles.userInfo}>
         <img src="/path-to-avatar.jpg" alt="User Avatar" className={styles.avatar} />
-        <div className={styles.userName}>voocel</div>
-        <div className={styles.userEmail}>voocel@163.com</div>
+        {!collapsed && (
+          <>
+            <div className={styles.userName}>voocel</div>
+            <div className={styles.userEmail}>voocel@163.com</div>
+          </>
+        )}
       </div>
       <div className={styles.userLinks}>
-        <a href="#"><HomeOutlined /></a>
+        <a href="/" onClick={handleHomeClick}><HomeOutlined /></a>
         <a href="#"><UserOutlined /></a>
         <a href="#"><SettingOutlined /></a>
       </div>
@@ -56,7 +81,7 @@ const Sidebar: React.FC = () => {
           <Link to="/admin/settings">系统设置</Link>
         </Menu.Item>
       </Menu>
-    </div>
+    </Sider>
   );
 };
 

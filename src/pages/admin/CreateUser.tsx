@@ -1,82 +1,74 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, message } from 'antd';
+import React from 'react';
+import { Form, Input, Button, Divider } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { createUser } from '../../services/users';
 import styles from '../../styles/CreateUser.module.css';
 
 const CreateUser: React.FC = () => {
-  const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
 
-  const onFinish = async (values: any) => {
-    setLoading(true);
-    try {
-      await createUser(values);
-      message.success('用户创建成功');
-      navigate('/admin/users');
-    } catch (error) {
-      message.error('创建用户失败');
-    } finally {
-      setLoading(false);
-    }
+  const onFinish = (values: any) => {
+    console.log('Success:', values);
+    // 这里添加创建用户的逻辑
   };
 
   return (
     <div className={styles.createUserContainer}>
-      <h1>创建新用户</h1>
-      <Form form={form} onFinish={onFinish} layout="vertical">
-        <Form.Item
-          name="username"
-          label="用户名"
-          rules={[{ required: true, message: '请输入用户名' }]}
+      <div className={styles.header}>
+        <h1>创建用户</h1>
+        <Button onClick={() => navigate('/admin/users')}>返回</Button>
+      </div>
+      <Divider className={styles.divider} />
+      <div className={styles.formWrapper}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          className={styles.form}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="email"
-          label="邮箱"
-          rules={[
-            { required: true, message: '请输入邮箱' },
-            { type: 'email', message: '请输入有效的邮箱地址' }
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          label="密码"
-          rules={[
-            { required: true, message: '请输入密码' },
-            { min: 6, message: '密码长度不能少于6个字符' }
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item
-          name="confirmPassword"
-          label="确认密码"
-          dependencies={['password']}
-          rules={[
-            { required: true, message: '请确认密码' },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('password') === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error('两次输入的密码不一致'));
-              },
-            }),
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
-            创建
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item name="username" label="用户名" rules={[{ required: true, message: '请输入用户名' }]}>
+            <Input placeholder="用户名" />
+          </Form.Item>
+          <Form.Item name="email" label="邮箱" rules={[{ required: true, type: 'email', message: '请输入有效的邮箱地址' }]}>
+            <Input placeholder="邮箱" />
+          </Form.Item>
+          <Form.Item name="nickname" label="昵称">
+            <Input placeholder="昵称" />
+          </Form.Item>
+          <Form.Item name="website" label="网站地址">
+            <Input placeholder="网站地址" />
+          </Form.Item>
+          <Form.Item name="description" label="描述">
+            <Input.TextArea placeholder="描述" />
+          </Form.Item>
+          <Form.Item name="password" label="密码" rules={[{ required: true, message: '请输入密码' }]}>
+            <Input.Password placeholder="密码" />
+          </Form.Item>
+          <Form.Item
+            name="confirmPassword"
+            label="确认密码"
+            dependencies={['password']}
+            rules={[
+              { required: true, message: '请确认密码' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('两次输入的密码不匹配'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="确认密码" />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className={styles.submitButton}>
+              创建
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
     </div>
   );
 };

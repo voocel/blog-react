@@ -6,8 +6,10 @@ import { TablePaginationConfig } from 'antd/es/table';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../../services/categories';
 import { Category } from '../../types/category';
 import styles from '../../styles/CategoryManagement.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const CategoryManagement: React.FC = () => {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
@@ -74,6 +76,10 @@ const CategoryManagement: React.FC = () => {
     }
   };
 
+  const handleCreate = () => {
+    navigate('/admin/categories/create');
+  };
+
   const columns = [
     {
       title: 'ID',
@@ -120,10 +126,8 @@ const CategoryManagement: React.FC = () => {
   return (
     <div className={styles.categoryManagement}>
       <div className={styles.header}>
-        <h1>分类列表</h1>
-        <Link to="/admin/categories/create">
-          <Button type="primary">创建</Button>
-        </Link>
+        <h1>分类管理</h1>
+        <Button type="primary" onClick={handleCreate}>创建分类</Button>
       </div>
       <Table
         columns={columns}

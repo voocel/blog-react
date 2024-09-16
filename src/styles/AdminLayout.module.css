@@ -33,7 +33,8 @@
   }
   
   .mainLayout {
-    margin-left: 220px; /* 调整为与侧边栏宽度相同 */
+    transition: margin-left 0.3s;
+    margin-left: 240px; /* 调整为新的侧边栏宽度 */
     background-color: #f0f2f5;
   }
   
@@ -64,3 +65,25 @@
 :global(.admin-layout .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected) {
   background-color: #2e384b;
 }
+
+:global(.admin-layout .ant-layout-sider) {
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  transition: all 0.3s;
+}
+
+:global(.admin-layout .ant-layout-sider-collapsed) {
+  flex: 0 0 80px !important;
+  max-width: 80px !important;
+  min-width: 80px !important;
+  width: 80px !important;
+}
+
+:global(.admin-layout .ant-layout-sider-collapsed + .ant-layout) {
+  margin-left: 80px;
+}
+
+/* 其他样式保持不变 */

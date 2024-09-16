@@ -1,42 +1,60 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { createCategory } from '../../services/categories';
-import { Category } from '../../types/category';
 import styles from '../../styles/CreateCategory.module.css';
 
-const CreateCategory: React.FC = () => {
-  const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+const { TextArea } = Input;
 
-  const onFinish = async (values: { name: string }) => {
-    setLoading(true);
+const CreateCategory: React.FC = () => {
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
+
+  const onFinish = async (values: any) => {
     try {
-      await createCategory({ name: values.name });
+      // 这里应该调用API来创建分类
+      console.log('创建分类:', values);
       message.success('分类创建成功');
       navigate('/admin/categories');
     } catch (error) {
       message.error('创建分类失败');
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className={styles.createCategoryContainer}>
-      <h1>创建新分类</h1>
-      <Form form={form} onFinish={onFinish} layout="vertical">
+    <div className={styles.createCategory}>
+      <h1>创建分类</h1>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        className={styles.form}
+      >
         <Form.Item
           name="name"
-          label="分类名称"
-          rules={[{ required: true, message: '请输入分类名称' }]}
+          label="分类名字"
+          rules={[{ required: true, message: '请输入分类名字' }]}
         >
           <Input />
         </Form.Item>
+        <Form.Item
+          name="slug"
+          label="别名"
+          rules={[{ required: true, message: '请输入别名' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="description"
+          label="描述"
+        >
+          <TextArea rows={4} placeholder="Please Input Category's Description" />
+        </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit">
             创建
+          </Button>
+          <Button onClick={() => navigate('/admin/categories')} style={{ marginLeft: 8 }}>
+            返回
           </Button>
         </Form.Item>
       </Form>

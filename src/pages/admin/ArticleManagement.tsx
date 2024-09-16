@@ -6,8 +6,10 @@ import { getArticles, deleteArticle } from '../../services/articles';
 import { Article } from '../../types/article';
 import styles from '../../styles/ArticleManagement.module.css';
 import { TablePaginationConfig } from 'antd/lib/table';
+import { useNavigate } from 'react-router-dom';
 
 const ArticleManagement: React.FC = () => {
+  const navigate = useNavigate();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
@@ -43,6 +45,10 @@ const ArticleManagement: React.FC = () => {
       console.error('Failed to delete article:', error);
       message.error('文章删除失败');
     }
+  };
+
+  const handleEdit = (id: string) => {
+    navigate(`/admin/articles/edit/${id}`);
   };
 
   const columns = [
@@ -81,13 +87,17 @@ const ArticleManagement: React.FC = () => {
     },
   ];
 
+  const handleCreateArticle = () => {
+    navigate('/admin/articles/create');
+  };
+
   return (
     <div className={styles.articleManagement}>
       <div className={styles.header}>
         <h1>文章列表</h1>
-        <Link to="/admin/articles/create">
-          <Button type="primary">创建</Button>
-        </Link>
+        <Button onClick={handleCreateArticle} type="primary" style={{ marginBottom: 16 }}>
+          创建文章
+        </Button>
       </div>
       <Table
         columns={columns}

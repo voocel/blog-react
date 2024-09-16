@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '../types/user';
-import { login as loginService, register as registerService } from '../services/auth';
+import { login as loginService, register as registerService, LoginResponse } from '../services/auth';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -34,12 +34,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (email: string, password: string) => {
     try {
-      const loggedInUser = await loginService(email, password);
-      setUser(loggedInUser);
+      const response: LoginResponse = await loginService(email, password);
+      setUser(response.user);
       setIsAuthenticated(true);
       localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('user', JSON.stringify(loggedInUser));
-      console.log('Login successful:', loggedInUser); // 添加这行来调试
+      localStorage.setItem('user', JSON.stringify(response.user));
+      localStorage.setItem('token', response.token);
+      console.log('Login successful:', response.user); // 添加这行来调试
     } catch (error) {
       console.error('登录失败:', error);
       throw error;
@@ -51,6 +52,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setUser(null);
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
   const register = async (email: string, password: string, username: string) => {

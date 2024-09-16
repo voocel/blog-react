@@ -6,6 +6,7 @@ import { Tag } from '../../types/tag';
 import styles from '../../styles/TagManagement.module.css';
 import { Link } from 'react-router-dom';
 import { TablePaginationConfig } from 'antd/es/table';
+import { useNavigate } from 'react-router-dom';
 
 const TagManagement: React.FC = () => {
   const [tags, setTags] = useState<Tag[]>([]);
@@ -18,6 +19,7 @@ const TagManagement: React.FC = () => {
     pageSize: 10,
     total: 0,
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchTags();
@@ -71,6 +73,10 @@ const TagManagement: React.FC = () => {
     } catch (error) {
       message.error('标签删除失败');
     }
+  };
+
+  const handleCreateTag = () => {
+    navigate('/admin/tags/create');
   };
 
   const columns = [

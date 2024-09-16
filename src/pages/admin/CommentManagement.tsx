@@ -14,7 +14,7 @@ const CommentManagement: React.FC = () => {
     pageSize: 10,
   });
 
-  const fetchComments = async (page: number = 1, pageSize: number = 10) => {
+  const fetchComments = async (page = 1, pageSize = 10) => {
     setLoading(true);
     try {
       const { data, total } = await getComments(page, pageSize);

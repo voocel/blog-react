@@ -1,18 +1,48 @@
-.createUser {
-    padding: 20px;
-  }
-  
-  .header {
+.createUserContainer {
+    padding: 24px;
+}
+
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .header h1 {
+    margin-bottom: 24px;
+}
+
+.header h1 {
     margin: 0;
-  }
-  
-  .form {
-    max-width: 600px;
-  }
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.divider {
+    margin: 16px 0;
+}
+
+.formWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.form {
+    width: 100%;
+    max-width: 500px;
+}
+
+.submitButton {
+    margin-top: 16px;
+}
+
+/* 覆盖 Ant Design 的默认样式 */
+:global(.ant-form-item-label > label) {
+    font-weight: normal;
+}
+
+:global(.ant-input),
+:global(.ant-input-password) {
+    border-radius: 2px;
+}
+
+:global(.ant-btn-primary) {
+    border-radius: 2px;
+}

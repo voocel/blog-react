@@ -1,6 +1,6 @@
 import { User } from '../types/user';
 import api from './api';
-import { AxiosResponse } from 'axios';  // 假设你使用的是 axios
+import { AxiosResponse } from 'axios';
 
 // 模拟用户数据
 const mockUser: User = {
@@ -17,41 +17,54 @@ const mockUser: User = {
   avatarUrl: 'https://example.com/avatar.jpg'
 };
 
-interface LoginResponse {
+export interface LoginResponse {
   user: User;
   token: string;
 }
 
-export const login = async (email: string, password: string): Promise<User> => {
-  try {
-    const response: AxiosResponse<LoginResponse> = await api.post('/auth/login', { email, password });
-    console.log('Login response:', response.data);
-    return response.data.user;
-  } catch (error) {
-    console.error('Login error:', error);
-    throw error;
+export const login = async (email: string, password: string): Promise<LoginResponse> => {
+  // 模拟网络请求延迟
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // 模拟登录逻辑
+  if (email === 'test@example.com' && password === 'password') {
+    return {
+      user: mockUser,
+      token: 'mock-jwt-token'
+    };
+  } else {
+    throw new Error('Invalid email or password');
   }
 };
 
 export const register = async (email: string, password: string, username: string): Promise<User> => {
-  try {
-    const response: AxiosResponse<User> = await api.post('/auth/register', { email, password, username });
-    return response.data;
-  } catch (error) {
-    console.error('Registration error:', error);
-    throw error;
+  // 模拟网络请求延迟
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // 模拟注册逻辑
+  if (email && password && username) {
+    return {
+      ...mockUser,
+      email,
+      username,
+      nickname: username
+    };
+  } else {
+    throw new Error('Invalid registration information');
   }
 };
 
 export const logout = async (): Promise<void> => {
-  await api.post('/auth/logout');
+  // 模拟网络请求延迟
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  // 在实际应用中，这里可能需要清除服务器端的 session
+  console.log('User logged out');
 };
 
 export const getCurrentUser = async (): Promise<User | null> => {
-  try {
-    const response = await api.get<User>('/auth/me');
-    return response;
-  } catch (error) {
-    return null;
-  }
+  // 模拟网络请求延迟
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // 模拟获取当前用户信息
+  return mockUser;
 };

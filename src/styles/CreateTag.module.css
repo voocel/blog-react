@@ -1,18 +1,49 @@
-.createTag {
-  padding: 20px;
+.createTagContainer {
+  padding: 24px;
+  background-color: #fff;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .header h1 {
   margin: 0;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.formWrapper {
+  display: flex;
+  justify-content: center;
 }
 
 .form {
-  max-width: 600px;
+  max-width: 400px;
+  width: 100%;
+}
+
+/* 覆盖 Ant Design 的默认样式 */
+:global(.ant-form-item-label > label) {
+  font-weight: normal;
+}
+
+:global(.ant-input),
+:global(.ant-input-textarea) {
+  border-radius: 2px;
+}
+
+:global(.ant-btn) {
+  border-radius: 2px;
+}
+
+:global(.ant-divider) {
+  margin: 16px 0 24px;
+}
+
+:global(.ant-form-item) {
+  margin-bottom: 24px;
 }

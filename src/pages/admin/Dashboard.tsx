@@ -1,13 +1,16 @@
 import React from 'react';
 import { Row, Col, Card } from 'antd';
 import { UserOutlined, EyeOutlined, FileTextOutlined, CommentOutlined, MenuOutlined } from '@ant-design/icons';
+import { useSidebar } from '../../contexts/SidebarContext';
 import styles from '../../styles/Dashboard.module.css';
 
 const Dashboard: React.FC = () => {
+  const { toggleSidebar } = useSidebar();
+
   return (
     <div className={styles.dashboard}>
       <header className={styles.header}>
-        <MenuOutlined className={styles.menuIcon} />
+        <MenuOutlined className={styles.menuIcon} onClick={toggleSidebar} />
       </header>
       <div className={styles.content}>
         <div className={styles.noticeBar}>
@@ -33,7 +36,13 @@ const Dashboard: React.FC = () => {
   );
 };
 
-const StatCard: React.FC<{ icon: React.ReactNode; title: string; value: number }> = ({ icon, title, value }) => (
+interface StatCardProps {
+  icon: React.ReactNode;
+  title: string;
+  value: number;
+}
+
+const StatCard: React.FC<StatCardProps> = ({ icon, title, value }) => (
   <Card className={styles.statCard}>
     <div className={styles.statHeader}>{title}</div>
     <div className={styles.statContent}>
