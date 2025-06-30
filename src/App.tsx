@@ -1,8 +1,14 @@
 import React from 'react';
-import AppRoutes from './routes';
+import { AppRouter } from './router';
+import ErrorBoundary from './components/ui/ErrorBoundary';
+import './index.css';
 
-const App: React.FC = () => {
-  return <AppRoutes />;
-};
+function App() {
+  return (
+    <ErrorBoundary>
+      <AppRouter />
+    </ErrorBoundary>
+  );
+}
 
 export default App;

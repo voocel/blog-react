@@ -1,4 +1,13 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
-   
+Allow: /
+
+# 禁止爬取管理后台
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+
+# 网站地图位置
+Sitemap: https://voocel.com/sitemap.xml
+
+# 爬取延迟（可选）
+Crawl-delay: 1

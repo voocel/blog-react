@@ -1,19 +1,209 @@
-/* 在这里添加全局样式 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Global avatar rotation animation */
+.avatar-container:hover .avatar-image {
+  transform: rotate(360deg);
+}
+
+.avatar-container:not(:hover) .avatar-image {
+  transform: rotate(0deg);
+}
+
+.avatar-image {
+  transition: transform 0.8s ease-in-out;
+}
+
+/* 🎨 优化字体颜色 - 让文字更加柔和 */
 body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #4b5563; /* 将默认文字颜色从黑色改为柔和的灰色 */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* 标题颜色优化 */
+h1, h2, h3, h4, h5, h6 {
+  color: #374151; /* 标题使用稍深一点的灰色 */
 }
 
-#root {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+/* 主要文本颜色 */
+.text-gray-900 {
+  color: #374151 !important; /* 原本的深黑色改为深灰色 */
+}
+
+.text-gray-800 {
+  color: #4b5563 !important; /* 稍微浅一点的灰色 */
+}
+
+.text-gray-700 {
+  color: #6b7280 !important; /* 中等灰色 */
+}
+
+.text-gray-600 {
+  color: #9ca3af !important; /* 浅灰色 */
+}
+
+/* 链接颜色优化 */
+a {
+  color: #6366f1; /* 使用更柔和的蓝色 */
+}
+
+a:hover {
+  color: #4f46e5;
+}
+
+/* 表格文字颜色优化 */
+table th {
+  color: #6b7280 !important; /* 表头使用中等灰色 */
+}
+
+table td {
+  color: #4b5563 !important; /* 表格内容使用深灰色 */
+}
+
+/* 按钮文字颜色保持不变，因为有背景色 */
+button {
+  /* 按钮文字颜色由背景色决定，不需要调整 */
+}
+
+/* 输入框文字颜色 */
+input, textarea, select {
+  color: #374151 !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+/* 导航菜单文字颜色 */
+nav a {
+  color: #6b7280;
+}
+
+nav a:hover {
+  color: #374151;
+}
+
+/* 卡片内容文字颜色 */
+.bg-white p, .bg-white div {
+  color: #6b7280;
+}
+
+.bg-white h1, .bg-white h2, .bg-white h3, .bg-white h4, .bg-white h5, .bg-white h6 {
+  color: #374151;
+}
+
+/* 侧边栏文字颜色保持不变，因为有深色背景 */
+.bg-slate-700, .bg-slate-600 {
+  /* 深色背景的文字保持白色 */
+}
+
+/* 状态文字颜色优化 */
+.text-green-600 {
+  color: #059669 !important;
+}
+
+.text-blue-600 {
+  color: #2563eb !important;
+}
+
+.text-red-600 {
+  color: #dc2626 !important;
+}
+
+/* 次要信息文字颜色 */
+.text-gray-500 {
+  color: #9ca3af !important;
+}
+
+.text-gray-400 {
+  color: #d1d5db !important;
+}
+
+/* 确保重要信息仍然清晰可见 */
+.font-bold, .font-semibold, .font-medium {
+  color: #374151 !important;
+}
+
+/* 错误和警告信息保持原有颜色以确保可见性 */
+.text-red-500, .text-red-600, .text-red-700 {
+  /* 保持原有的红色 */
+}
+
+.text-yellow-500, .text-yellow-600, .text-yellow-700 {
+  /* 保持原有的黄色 */
+}
+
+.text-green-500, .text-green-600, .text-green-700 {
+  /* 保持原有的绿色 */
+}
+
+/* 🔧 用户名颜色统一 - 不使用特殊颜色 */
+.username {
+  color: #374151 !important; /* 用户名使用统一的深灰色 */
+}
+
+/* 确保用户名在不同背景下都使用统一颜色 */
+.text-purple-600, .text-pink-500, .text-indigo-600 {
+  color: #374151 !important; /* 将之前的紫色等特殊颜色统一为深灰色 */
+}
+
+/* 🎨 Header 特殊颜色处理 - 保持原有的白色/浅色 */
+header .text-white,
+header .text-gray-100,
+header .text-gray-200,
+header .text-gray-300 {
+  /* Header 中的文字保持原有颜色，不受全局灰色影响 */
+}
+
+/* 🎨 Read More 按钮颜色 - 改为浅绿色 */
+.read-more-button {
+  color: #10b981 !important; /* 浅绿色 */
+}
+
+.read-more-button:hover {
+  color: #059669 !important; /* 悬停时稍深一点的绿色 */
 }
