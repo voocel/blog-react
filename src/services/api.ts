@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useAuthStore } from '../stores/authStore';
+import { navigationManager } from '../utils/navigation';
 
 // API响应格式
 export interface ApiResponse<T = any> {
@@ -63,7 +64,7 @@ const createApiClient = (): AxiosInstance => {
           case 401:
             // 未授权，清除登录状态
             useAuthStore.getState().logout();
-            window.location.href = '/login';
+            navigationManager.navigate('/login');
             break;
           case 403:
             throw new Error('没有权限访问该资源');

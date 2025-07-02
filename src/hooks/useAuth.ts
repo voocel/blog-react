@@ -3,54 +3,7 @@ import { useAuthStore } from '../stores/authStore';
 import { AuthService } from '../services/authService';
 import { User } from '../types/auth';
 
-// 模拟用户数据 - 生产环境中应该删除
-const mockUsers: User[] = [
-  {
-    id: '1',
-    username: 'voocel',
-    email: 'admin@163.com',
-    avatar: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=100',
-    role: 'admin',
-    nickname: 'voocel',
-    website: 'https://voocel.com',
-    description: '全栈开发者，专注于Go、React和AI技术'
-  },
-  {
-    id: '2',
-    username: 'testuser',
-    email: 'testuser@example.com',
-    avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100',
-    role: 'user',
-    nickname: '测试用户',
-    website: '',
-    description: '这是一个普通用户账号'
-  }
-];
-
-// 模拟登录验证 - 生产环境中应该删除
-const authenticateUser = (email: string, password: string): User | null => {
-  if (email === 'admin@163.com' && password === 'admin123') {
-    return mockUsers[0]; // 管理员
-  }
-  if (email === 'testuser@example.com' && password === 'user123') {
-    return mockUsers[1]; // 普通用户
-  }
-  return null;
-};
-
-// 模拟注册 - 生产环境中应该删除
-const registerUser = (username: string, email: string, password: string): User => {
-  return {
-    id: Date.now().toString(),
-    username,
-    email,
-    avatar: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=100',
-    role: 'user',
-    nickname: username,
-    website: '',
-    description: ''
-  };
-};
+// 真实API模式 - 模拟数据已移除
 
 interface LoginRequest {
   email: string;
@@ -72,26 +25,26 @@ export const useAuth = () => {
   const handleLogin = useCallback(async (data: LoginRequest) => {
     try {
       // 🔄 切换到真实API时，取消注释下面的代码，删除模拟逻辑
-      /*
+      
       const result = await AuthService.login(data);
       login(result.user, result.token);
       return { success: true, user: result.user };
-      */
+      
 
       // 🚧 模拟逻辑 - 生产环境中删除
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const authenticatedUser = authenticateUser(data.email, data.password);
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+      // const authenticatedUser = authenticateUser(data.email, data.password);
       
-      if (authenticatedUser) {
-        const mockToken = `mock_token_${Date.now()}`;
-        login(authenticatedUser, mockToken);
-        return { success: true, user: authenticatedUser };
-      } else {
-        return { 
-          success: false, 
-          error: '邮箱或密码错误' 
-        };
-      }
+      // if (authenticatedUser) {
+      //   const mockToken = `mock_token_${Date.now()}`;
+      //   login(authenticatedUser, mockToken);
+      //   return { success: true, user: authenticatedUser };
+      // } else {
+      //   return { 
+      //     success: false, 
+      //     error: '邮箱或密码错误' 
+      //   };
+      // }
     } catch (error) {
       return { 
         success: false, 
@@ -104,19 +57,19 @@ export const useAuth = () => {
   const handleRegister = useCallback(async (data: RegisterRequest) => {
     try {
       // 🔄 切换到真实API时，取消注释下面的代码，删除模拟逻辑
-      /*
+      
       const result = await AuthService.register(data);
       login(result.user, result.token);
       return { success: true, user: result.user };
-      */
+      
 
       // 🚧 模拟逻辑 - 生产环境中删除
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const newUser = registerUser(data.username, data.email, data.password);
-      const mockToken = `mock_token_${Date.now()}`;
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+      // const newUser = registerUser(data.username, data.email, data.password);
+      // const mockToken = `mock_token_${Date.now()}`;
       
-      login(newUser, mockToken);
-      return { success: true, user: newUser };
+      // login(newUser, mockToken);
+      // return { success: true, user: newUser };
     } catch (error) {
       return { 
         success: false, 
@@ -129,12 +82,12 @@ export const useAuth = () => {
   const handleLogout = useCallback(async () => {
     try {
       // 🔄 切换到真实API时，取消注释下面的代码
-      /*
+      
       await AuthService.logout();
-      */
+      
 
       // 🚧 模拟逻辑 - 生产环境中删除
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // await new Promise(resolve => setTimeout(resolve, 500));
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -146,16 +99,16 @@ export const useAuth = () => {
   const handleUpdateProfile = useCallback(async (data: Partial<User>) => {
     try {
       // 🔄 切换到真实API时，取消注释下面的代码，删除模拟逻辑
-      /*
+      
       const updatedUser = await AuthService.updateProfile(data);
       updateUser(updatedUser);
       return { success: true, user: updatedUser };
-      */
+      
 
       // 🚧 模拟逻辑 - 生产环境中删除
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      updateUser(data);
-      return { success: true, user: { ...user, ...data } as User };
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+      // updateUser(data);
+      // return { success: true, user: { ...user, ...data } as User };
     } catch (error) {
       return { 
         success: false, 
@@ -171,23 +124,21 @@ export const useAuth = () => {
   }) => {
     try {
       // 🔄 切换到真实API时，取消注释下面的代码，删除模拟逻辑
-      /*
+      
       await AuthService.changePassword(data);
       return { success: true };
-      */
+      
 
       // 🚧 模拟逻辑 - 生产环境中删除
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // 简单验证旧密码
-      if (user?.email === 'admin@163.com' && data.oldPassword !== 'admin123') {
-        return { 
-          success: false, 
-          error: '旧密码不正确' 
-        };
-      }
-      
-      return { success: true };
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+      // // 简单验证旧密码
+      // if (user?.email === 'admin@163.com' && data.oldPassword !== 'admin123') {
+      //   return { 
+      //     success: false, 
+      //     error: '旧密码不正确' 
+      //   };
+      // }
+      // return { success: true };
     } catch (error) {
       return { 
         success: false, 

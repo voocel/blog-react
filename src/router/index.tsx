@@ -1,7 +1,8 @@
-import React, { Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { Suspense, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { useAnalytics } from '../hooks/useAnalytics';
+import { navigationManager } from '../utils/navigation';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorBoundary from '../components/ui/ErrorBoundary';
 
@@ -63,8 +64,23 @@ const PageLoader: React.FC = () => (
 
 // 路由内容组件
 const RouterContent: React.FC = () => {
+  const navigate = useNavigate();
+  
   // 在 BrowserRouter 内部初始化 Google Analytics
   useAnalytics();
+
+  // 注册全局导航处理器
+  useEffect(() => {
+    // 注册React Router导航处理器
+    navigationManager.setNavigationHandler((path: string) => {
+      navigate(path, { replace: true });
+    });
+
+    // 清理函数
+    return () => {
+      navigationManager.clearNavigationHandler();
+    };
+  }, [navigate]);
 
   return (
     <ErrorBoundary>
