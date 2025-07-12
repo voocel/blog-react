@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { useAuthStore } from '../stores/authStore';
+import { resolveImageUrl } from '../utils/apiHelpers';
 
 const ProfileCenter: React.FC = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const ProfileCenter: React.FC = () => {
             <div className="flex items-center space-x-8">
               <div className="avatar-container">
                 <img 
-                  src={user.avatar} 
+                  src={resolveImageUrl(user.avatar)} 
                   alt={user.username}
                   className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg flex-shrink-0 avatar-image"
                 />

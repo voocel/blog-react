@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Lock, Settings, Check } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { useAuthStore } from '../stores/authStore';
 import { useAuth } from '../hooks/useAuth';
+import { useUserProfile } from '../hooks/useUserProfile';
+import { FileService } from '../services/fileService';
+import { resolveImageUrl } from '../utils/apiHelpers';
 
 // 成功提示组件
 const SuccessToast: React.FC<{ message: string; onClose: () => void }> = ({ message, onClose }) => {
@@ -30,23 +33,27 @@ const SuccessToast: React.FC<{ message: string; onClose: () => void }> = ({ mess
 const ProfileSettings: React.FC = () => {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
-  const { updateProfile, changePassword } = useAuth();
+  const { changePassword } = useAuth();
+  
+  // 简洁的用户资料管理
+  const { user: currentUser, isLoading, refresh, update } = useUserProfile();
   
   const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'account'>('profile');
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const [currentAvatar, setCurrentAvatar] = useState(user?.avatar || '');
+  const [currentAvatar, setCurrentAvatar] = useState('');
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [uploadError, setUploadError] = useState('');
   
   const [profileData, setProfileData] = useState({
-    username: user?.username || 'voocel',
-    email: user?.email || 'admin@163.com',
-    nickname: user?.nickname || '',
-    website: user?.website || '',
+    username: '',
+    email: '',
+    nickname: '',
+    website: '',
     weiboName: '',
     weiboUrl: '',
     github: '',
-    description: user?.description || ''
+    description: ''
   });
   
   const [passwordData, setPasswordData] = useState({
@@ -61,6 +68,23 @@ const ProfileSettings: React.FC = () => {
     qq: false,
     wechat: false
   });
+
+  // 同步用户信息到表单和头像
+  useEffect(() => {
+    if (currentUser) {
+      setProfileData({
+        username: currentUser.username || '',
+        email: currentUser.email || '',
+        nickname: currentUser.nickname || '',
+        website: currentUser.website || '',
+        weiboName: '',
+        weiboUrl: '',
+        github: '',
+        description: currentUser.description || ''
+      });
+      setCurrentAvatar(currentUser.avatar || '');
+    }
+  }, [currentUser]);
 
   if (!user) {
     navigate('/login');
@@ -91,18 +115,20 @@ const ProfileSettings: React.FC = () => {
     input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
+        setUploadError('');
         setIsUploadingAvatar(true);
+        
         try {
-          // 模拟上传过程
-          await new Promise(resolve => setTimeout(resolve, 1500));
+          // 上传头像并更新用户资料
+          const { url } = await FileService.uploadAvatar(file);
+          await update({ avatar: url });
           
-          // 创建本地预览URL
-          const newAvatarUrl = URL.createObjectURL(file);
-          setCurrentAvatar(newAvatarUrl);
-          
+          setCurrentAvatar(url);
           setSuccessMessage('头像上传成功！');
           setShowSuccessToast(true);
         } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : '头像上传失败';
+          setUploadError(errorMessage);
           console.error('头像上传失败:', error);
         } finally {
           setIsUploadingAvatar(false);
@@ -115,12 +141,18 @@ const ProfileSettings: React.FC = () => {
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const result = await updateProfile({
-      ...profileData,
-      avatar: currentAvatar
-    });
-    if (result.success) {
+    try {
+      await update({
+        nickname: profileData.nickname,
+        website: profileData.website,
+        description: profileData.description,
+        avatar: currentAvatar
+      });
+      
       setSuccessMessage('资料更新成功！');
+      setShowSuccessToast(true);
+    } catch (error) {
+      setSuccessMessage('更新失败，请重试');
       setShowSuccessToast(true);
     }
   };
@@ -203,6 +235,11 @@ const ProfileSettings: React.FC = () => {
             <div className="flex-1">
               {activeTab === 'profile' && (
                 <div className="bg-white rounded-lg shadow-sm p-8">
+                  {/* 页面标题 */}
+                  <div className="mb-6">
+                    <h2 className="text-xl font-semibold text-gray-800">基本资料设置</h2>
+                  </div>
+
                   <form onSubmit={handleProfileSubmit} className="max-w-2xl mx-auto space-y-6">
                     {/* 头像部分 - 点击上传 */}
                     <div className="flex flex-col items-center mb-8">
@@ -212,7 +249,7 @@ const ProfileSettings: React.FC = () => {
                           onClick={handleAvatarClick}
                         >
                           <img 
-                            src={currentAvatar} 
+                            src={resolveImageUrl(currentAvatar)} 
                             alt={user.username}
                             className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 avatar-image transition-all duration-300 group-hover:opacity-80"
                           />
@@ -232,6 +269,18 @@ const ProfileSettings: React.FC = () => {
                           </div>
                         </div>
                       </div>
+                      
+                      {/* 错误提示 */}
+                      {uploadError && (
+                        <div className="mt-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-md">
+                          {uploadError}
+                        </div>
+                      )}
+                      
+                      {/* 提示信息 */}
+                      <p className="text-sm text-gray-500 mt-2">
+                        支持 JPG、PNG、GIF、WebP 格式，最大 5MB
+                      </p>
                     </div>
 
                     {/* 表单字段 */}

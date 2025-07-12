@@ -32,17 +32,17 @@ export class UserService {
   }
 
   // 更新用户（管理员）
-  static async updateUser(id: string, data: Partial<User>): Promise<User> {
+  static async updateUser(id: number, data: Partial<User>): Promise<User> {
     return ApiService.put<User>(`/admin/users/${id}`, data);
   }
 
   // 删除用户（管理员）
-  static async deleteUser(id: string): Promise<void> {
+  static async deleteUser(id: number): Promise<void> {
     return ApiService.delete<void>(`/admin/users/${id}`);
   }
 
   // 获取用户详情
-  static async getUser(id: string): Promise<User> {
+  static async getUser(id: number): Promise<User> {
     return ApiService.get<User>(`/users/${id}`);
   }
 }

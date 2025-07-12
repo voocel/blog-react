@@ -14,13 +14,22 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 }) => {
   const [isUploading, setIsUploading] = useState(false);
 
-  const simulateUpload = (file: File): Promise<string> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const mockUrl = `/uploads/${file.name}`;
-        resolve(mockUrl);
-      }, 1500);
+  const uploadFile = async (file: File): Promise<string> => {
+    // TODO: 替换为真实的文件上传逻辑
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await fetch('/api/files/upload', {
+      method: 'POST',
+      body: formData,
     });
+    
+    if (!response.ok) {
+      throw new Error('上传失败');
+    }
+    
+    const result = await response.json();
+    return result.data.url;
   };
 
   const handleFileUpload = async () => {
@@ -32,10 +41,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       if (file) {
         setIsUploading(true);
         try {
-          const uploadedUrl = await simulateUpload(file);
+          const uploadedUrl = await uploadFile(file);
           onChange(uploadedUrl);
         } catch (error) {
           console.error('上传失败:', error);
+          // 作为备用，可以使用base64编码
           const reader = new FileReader();
           reader.onload = (e) => {
             const result = e.target?.result as string;

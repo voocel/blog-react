@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Search, Bell, ChevronDown, ChevronUp } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { useAuth } from '../../hooks/useAuth';
+import { resolveImageUrl } from '../../utils/apiHelpers';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ const Header: React.FC = () => {
                   >
                     <span className="text-sm text-white">{user.username}</span>
                     <img 
-                      src={user.avatar} 
+                      src={resolveImageUrl(user.avatar)} 
                       alt="User Avatar" 
                       className="w-8 h-8 rounded-full object-cover"
                     />

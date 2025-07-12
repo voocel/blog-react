@@ -25,16 +25,7 @@ const FriendLinkManagement: React.FC = () => {
     friendLink: null
   });
 
-  const [friendLinks, setFriendLinks] = useState<FriendLink[]>([
-    {
-      id: 1,
-      name: 'google',
-      url: 'https://google.com',
-      logo: 'https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
-      isActive: true,
-      createdAt: '2025-06-28 05:21:43'
-    }
-  ]);
+  const [friendLinks, setFriendLinks] = useState<FriendLink[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
 

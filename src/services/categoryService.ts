@@ -19,9 +19,10 @@ export class CategoryService {
     return ApiService.get<PaginatedResponse<Category>>(url);
   }
 
-  // 获取所有分类（不分页，树形结构）
+  // 获取所有分类（不分页）
   static async getAllCategories(): Promise<Category[]> {
-    return ApiService.get<Category[]>('/categories/tree');
+    const result = await this.getCategories({ pageSize: 999 });
+    return result.items;
   }
 
   // 创建分类
@@ -30,12 +31,12 @@ export class CategoryService {
   }
 
   // 更新分类
-  static async updateCategory(id: string, data: Partial<CreateCategoryRequest>): Promise<Category> {
+  static async updateCategory(id: number, data: Partial<CreateCategoryRequest>): Promise<Category> {
     return ApiService.put<Category>(`/categories/${id}`, data);
   }
 
   // 删除分类
-  static async deleteCategory(id: string): Promise<void> {
+  static async deleteCategory(id: number): Promise<void> {
     return ApiService.delete<void>(`/categories/${id}`);
   }
 }

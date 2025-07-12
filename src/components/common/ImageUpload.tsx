@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Upload, X, AlertCircle } from 'lucide-react';
+import { FileService } from '../../services/fileService';
 
 interface ImageUploadProps {
   value?: string;
@@ -40,15 +41,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     return null;
   };
 
-  const simulateUpload = async (file: File): Promise<string> => {
-    // 模拟上传过程
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // 模拟服务器返回的URL
-        const mockUrl = `/uploads/${Date.now()}_${file.name}`;
-        resolve(mockUrl);
-      }, 1000 + Math.random() * 1000);
-    });
+  const uploadFile = async (file: File): Promise<string> => {
+    const { url } = await FileService.uploadFile(file, 'images');
+    return url;
   };
 
   const handleFiles = useCallback(async (files: FileList | File[]) => {
@@ -78,12 +73,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     try {
       if (multiple && onMultipleUpload) {
         // 多文件上传
-        const uploadPromises = validFiles.map(file => simulateUpload(file));
+        const uploadPromises = validFiles.map(file => uploadFile(file));
         const uploadedUrls = await Promise.all(uploadPromises);
         onMultipleUpload(uploadedUrls);
       } else {
         // 单文件上传
-        const uploadedUrl = await simulateUpload(validFiles[0]);
+        const uploadedUrl = await uploadFile(validFiles[0]);
         onChange(uploadedUrl);
       }
     } catch (error) {

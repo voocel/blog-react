@@ -20,10 +20,7 @@ export class FriendLinkService {
     return ApiService.get<PaginatedResponse<FriendLink>>(url);
   }
 
-  // 获取活跃友链（前台显示）
-  static async getActiveFriendLinks(): Promise<FriendLink[]> {
-    return ApiService.get<FriendLink[]>('/friendlinks/active');
-  }
+
 
   // 创建友链
   static async createFriendLink(data: CreateFriendLinkRequest): Promise<FriendLink> {
@@ -31,12 +28,12 @@ export class FriendLinkService {
   }
 
   // 更新友链
-  static async updateFriendLink(id: string, data: Partial<CreateFriendLinkRequest>): Promise<FriendLink> {
+  static async updateFriendLink(id: number, data: Partial<CreateFriendLinkRequest>): Promise<FriendLink> {
     return ApiService.put<FriendLink>(`/friendlinks/${id}`, data);
   }
 
   // 删除友链
-  static async deleteFriendLink(id: string): Promise<void> {
+  static async deleteFriendLink(id: number): Promise<void> {
     return ApiService.delete<void>(`/friendlinks/${id}`);
   }
 }

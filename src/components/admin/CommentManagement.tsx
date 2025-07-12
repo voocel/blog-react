@@ -23,23 +23,7 @@ const CommentManagement: React.FC = () => {
     comment: null
   });
 
-  const [comments, setComments] = useState<Comment[]>([
-    {
-      id: 2,
-      username: 'zigo',
-      commentType: 'discussions',
-      commentTitle: '斗地主是否与外观实际服务器?',
-      createdAt: '1年前'
-    },
-    {
-      id: 1,
-      username: 'voocel',
-      commentType: 'discussions',
-      commentTitle: '斗地主是否与外观实际服务器?',
-      createdAt: '1年前',
-      content: '因为试验服务器有点卡'
-    }
-  ]);
+  const [comments, setComments] = useState<Comment[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
 

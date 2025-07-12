@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface Tag {
   id: number;
   name: string;
-  slug: string;
+  title?: string;
   description: string;
   createdAt: string;
 }
@@ -16,7 +16,7 @@ interface TagEditProps {
 const TagEdit: React.FC<TagEditProps> = ({ tag, onBack }) => {
   const [formData, setFormData] = useState({
     name: tag.name || 'ComfyUI',
-    slug: tag.slug || 'ComfyUI',
+    title: tag.title || '',
     description: tag.description || 'ComfyUI.'
   });
 
@@ -57,7 +57,7 @@ const TagEdit: React.FC<TagEditProps> = ({ tag, onBack }) => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      标签
+                      标签名称
                     </label>
                     <input
                       type="text"
@@ -65,36 +65,36 @@ const TagEdit: React.FC<TagEditProps> = ({ tag, onBack }) => {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      placeholder="标签"
+                      placeholder="请输入标签名称"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
                       标题
                     </label>
                     <input
                       type="text"
-                      id="slug"
-                      name="slug"
-                      value={formData.slug}
+                      id="title"
+                      name="title"
+                      value={formData.title}
                       onChange={handleInputChange}
-                      placeholder="标题"
+                      placeholder="请输入标签标题"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
 
                   <div>
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                      主要描述
+                      描述
                     </label>
                     <textarea
                       id="description"
                       name="description"
                       value={formData.description}
                       onChange={handleInputChange}
-                      placeholder="主要描述"
+                      placeholder="请输入标签描述"
                       rows={4}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                     />

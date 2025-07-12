@@ -22,7 +22,7 @@ export class DiscussionService {
   }
 
   // 获取讨论详情
-  static async getDiscussion(id: string): Promise<Discussion> {
+  static async getDiscussion(id: number): Promise<Discussion> {
     return ApiService.get<Discussion>(`/discussions/${id}`);
   }
 
@@ -32,12 +32,17 @@ export class DiscussionService {
   }
 
   // 更新讨论
-  static async updateDiscussion(id: string, data: Partial<CreateDiscussionRequest>): Promise<Discussion> {
+  static async updateDiscussion(id: number, data: Partial<CreateDiscussionRequest>): Promise<Discussion> {
     return ApiService.put<Discussion>(`/discussions/${id}`, data);
   }
 
   // 删除讨论
-  static async deleteDiscussion(id: string): Promise<void> {
+  static async deleteDiscussion(id: number): Promise<void> {
     return ApiService.delete<void>(`/discussions/${id}`);
+  }
+
+  // 获取热门讨论
+  static async getPopularDiscussions(limit = 10): Promise<Discussion[]> {
+    return ApiService.get<Discussion[]>(`/discussions/popular?limit=${limit}`);
   }
 }

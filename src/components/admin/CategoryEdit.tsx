@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface Category {
   id: number;
   name: string;
-  slug: string;
+  path: string;
   description: string;
   createdAt: string;
 }
@@ -16,7 +16,7 @@ interface CategoryEditProps {
 const CategoryEdit: React.FC<CategoryEditProps> = ({ category, onBack }) => {
   const [formData, setFormData] = useState({
     name: category.name || 'AI',
-    slug: category.slug || 'ai',
+    path: category.path || 'ai',
     description: category.description || 'ai'
   });
 
@@ -71,14 +71,14 @@ const CategoryEdit: React.FC<CategoryEditProps> = ({ category, onBack }) => {
                   </div>
 
                   <div>
-                    <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="path" className="block text-sm font-medium text-gray-700 mb-2">
                       路径
                     </label>
                     <input
                       type="text"
-                      id="slug"
-                      name="slug"
-                      value={formData.slug}
+                      id="path"
+                      name="path"
+                      value={formData.path}
                       onChange={handleInputChange}
                       placeholder="路径"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"

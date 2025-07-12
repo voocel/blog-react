@@ -34,18 +34,22 @@ export class FileService {
   }
 
   // 删除文件
-  static async deleteFile(id: string): Promise<void> {
+  static async deleteFile(id: number): Promise<void> {
     return ApiService.delete<void>(`/files/${id}`);
   }
 
   // 创建文件夹
-  static async createFolder(name: string, path: string): Promise<FileItem> {
-    return ApiService.post<FileItem>('/files/folder', { name, path });
+  static async createFolder(data: { name: string; path: string }): Promise<FileItem> {
+    return ApiService.post<FileItem>('/files/folder', data);
   }
 
-  // 批量上传文件
-  static async uploadMultipleFiles(files: File[], path?: string): Promise<FileItem[]> {
-    const uploadPromises = files.map(file => this.uploadFile(file, path));
-    return Promise.all(uploadPromises);
+  // 重命名文件
+  static async renameFile(id: number, name: string): Promise<FileItem> {
+    return ApiService.put<FileItem>(`/files/${id}/rename`, { name });
+  }
+
+  // 移动文件
+  static async moveFile(id: number, path: string): Promise<FileItem> {
+    return ApiService.put<FileItem>(`/files/${id}/move`, { path });
   }
 }

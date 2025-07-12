@@ -17,11 +17,12 @@ export class TagService {
 
     const url = `/tags${queryString.toString() ? `?${queryString.toString()}` : ''}`;
     return ApiService.get<PaginatedResponse<Tag>>(url);
-  }
+    }
 
   // 获取所有标签（不分页）
   static async getAllTags(): Promise<Tag[]> {
-    return ApiService.get<Tag[]>('/tags/all');
+    const result = await this.getTags({ pageSize: 999 });
+    return result.items;
   }
 
   // 创建标签
@@ -30,12 +31,12 @@ export class TagService {
   }
 
   // 更新标签
-  static async updateTag(id: string, data: Partial<CreateTagRequest>): Promise<Tag> {
+  static async updateTag(id: number, data: Partial<CreateTagRequest>): Promise<Tag> {
     return ApiService.put<Tag>(`/tags/${id}`, data);
   }
 
   // 删除标签
-  static async deleteTag(id: string): Promise<void> {
+  static async deleteTag(id: number): Promise<void> {
     return ApiService.delete<void>(`/tags/${id}`);
   }
 

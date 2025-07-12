@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { resolveImageUrl } from '../../utils/apiHelpers';
 
 interface OptimizedImageProps {
   src: string;
@@ -36,8 +37,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
       )}
       
       <img
-        src={src}
-        srcSet={generateSrcSet(src)}
+        src={resolveImageUrl(src)}
+        srcSet={generateSrcSet(resolveImageUrl(src))}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         alt={alt}
         width={width}

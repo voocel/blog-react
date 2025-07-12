@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Edit, Trash2, Plus } from 'lucide-react';
+import { Edit, Trash2, Plus, Tag as TagIcon } from 'lucide-react';
 import TagCreate from './TagCreate';
 import TagEdit from './TagEdit';
 import ConfirmDialog from '../ui/ConfirmDialog';
@@ -23,81 +23,10 @@ const TagManagement: React.FC = () => {
     tag: null
   });
 
-  const [tags, setTags] = useState<Tag[]>([
-    {
-      id: 28,
-      name: 'ComfyUI',
-      slug: 'ComfyUI',
-      description: 'ComfyUI.',
-      createdAt: '2024-08-16 00:16:51'
-    },
-    {
-      id: 27,
-      name: 'StableDiffusion',
-      slug: 'Stable Diffusion',
-      description: 'Stable Diffusion.',
-      createdAt: '2024-08-16 00:16:20'
-    },
-    {
-      id: 26,
-      name: 'LLM',
-      slug: 'llm',
-      description: 'llm',
-      createdAt: '2024-08-16 00:15:55'
-    },
-    {
-      id: 25,
-      name: 'https',
-      slug: 'https',
-      description: 'https',
-      createdAt: '2024-08-13 20:11:47'
-    },
-    {
-      id: 24,
-      name: 'TLS',
-      slug: 'tls',
-      description: 'tls',
-      createdAt: '2024-08-13 20:11:35'
-    },
-    {
-      id: 23,
-      name: 'gRPC',
-      slug: 'grpc',
-      description: 'gRPC 是一个高性能、开源和通用的 RPC 框架，它基于 HTTP/2 协议标准。gRPC 支持多种语言，包括 Go、Java、PHP、Python、C# 等，使用它可以轻松地构建分布式系统',
-      createdAt: '2024-08-13 16:59:03'
-    },
-    {
-      id: 22,
-      name: 'HTTP',
-      slug: 'http',
-      description: 'HTTP (Hypertext Transfer Protocol) 是一种用于从万维网服务器传输超文本到本地浏览器的应用层协议。',
-      createdAt: '2024-08-13 16:35:49'
-    },
-    {
-      id: 21,
-      name: 'protobuf',
-      slug: 'Protobuf',
-      description: 'Protocol Buffers (Protobuf) 是一种由 Google 开发的数据序列化协议，它使用高效的二进制格式，支持多种编程语言和平台。',
-      createdAt: '2024-08-12 20:44:45'
-    },
-    {
-      id: 20,
-      name: 'Prometheus',
-      slug: 'Prometheus',
-      description: 'Prometheus监控',
-      createdAt: '2022-04-05 18:44:53'
-    },
-    {
-      id: 19,
-      name: 'Gin',
-      slug: 'Gin',
-      description: 'Golang的Web框架',
-      createdAt: '2021-04-13 04:20:23'
-    }
-  ]);
+  const [tags, setTags] = useState<Tag[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 3;
+  const totalPages = Math.ceil(tags.length / 10) || 1;
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -173,43 +102,55 @@ const TagManagement: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {tags.map((tag) => (
-              <tr key={tag.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {tag.id}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {tag.name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {tag.slug}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-900">
-                  <div className="max-w-md">
-                    {tag.description}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {tag.createdAt}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div className="flex items-center space-x-2">
-                    <button 
-                      onClick={() => handleEditClick(tag)}
-                      className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </button>
-                    <button 
-                      onClick={() => handleDeleteClick(tag)}
-                      className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+            {tags.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                  <div className="flex flex-col items-center space-y-2">
+                    <TagIcon className="w-12 h-12 text-gray-300" />
+                    <p>暂无标签数据</p>
+                    <p className="text-sm">点击上方"创建"按钮开始创建第一个标签</p>
                   </div>
                 </td>
               </tr>
-            ))}
+            ) : (
+              tags.map((tag) => (
+                <tr key={tag.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {tag.id}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {tag.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {tag.slug}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    <div className="max-w-md">
+                      {tag.description}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {tag.createdAt}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center space-x-2">
+                      <button 
+                        onClick={() => handleEditClick(tag)}
+                        className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteClick(tag)}
+                        className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

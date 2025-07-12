@@ -14,8 +14,8 @@ export class CommentService {
     if (params?.page) queryString.append('page', params.page.toString());
     if (params?.pageSize) queryString.append('pageSize', params.pageSize.toString());
     if (params?.search) queryString.append('search', params.search);
-    if (params?.articleId) queryString.append('articleId', params.articleId);
-    if (params?.discussionId) queryString.append('discussionId', params.discussionId);
+    if (params?.articleId) queryString.append('articleId', params.articleId.toString());
+    if (params?.discussionId) queryString.append('discussionId', params.discussionId.toString());
     if (params?.status) queryString.append('status', params.status);
 
     const url = `/comments${queryString.toString() ? `?${queryString.toString()}` : ''}`;
@@ -28,22 +28,22 @@ export class CommentService {
   }
 
   // 更新评论
-  static async updateComment(id: string, data: { content: string }): Promise<Comment> {
+  static async updateComment(id: number, data: Partial<CreateCommentRequest>): Promise<Comment> {
     return ApiService.put<Comment>(`/comments/${id}`, data);
   }
 
   // 删除评论
-  static async deleteComment(id: string): Promise<void> {
+  static async deleteComment(id: number): Promise<void> {
     return ApiService.delete<void>(`/comments/${id}`);
   }
 
-  // 审核评论（管理员）
-  static async approveComment(id: string): Promise<Comment> {
-    return ApiService.post<Comment>(`/admin/comments/${id}/approve`);
+  // 审核评论
+  static async approveComment(id: number): Promise<Comment> {
+    return ApiService.put<Comment>(`/comments/${id}/approve`);
   }
 
-  // 拒绝评论（管理员）
-  static async rejectComment(id: string): Promise<Comment> {
-    return ApiService.post<Comment>(`/admin/comments/${id}/reject`);
+  // 拒绝评论
+  static async rejectComment(id: number): Promise<Comment> {
+    return ApiService.put<Comment>(`/comments/${id}/reject`);
   }
 }

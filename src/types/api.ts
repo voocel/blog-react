@@ -30,7 +30,7 @@ export interface ErrorResponse {
 
 // 用户相关类型
 export interface User {
-  id: string;
+  id: number;
   username: string;
   email: string;
   avatar: string;
@@ -45,7 +45,7 @@ export interface User {
 
 // 文章相关类型
 export interface Article {
-  id: string;
+  id: number;
   title: string;
   subtitle?: string;
   content: string;
@@ -59,7 +59,7 @@ export interface Article {
   tags: Tag[];
   category: Category;
   author: {
-    id: string;
+    id: number;
     username: string;
     avatar: string;
   };
@@ -70,7 +70,7 @@ export interface Article {
 
 // 讨论相关类型
 export interface Discussion {
-  id: string;
+  id: number;
   title: string;
   content: string;
   status: 'active' | 'inactive';
@@ -78,7 +78,7 @@ export interface Discussion {
   replyCount: number;
   tags: Tag[];
   author: {
-    id: string;
+    id: number;
     username: string;
     avatar: string;
   };
@@ -88,14 +88,14 @@ export interface Discussion {
 
 // 评论相关类型
 export interface Comment {
-  id: string;
+  id: number;
   content: string;
   status: 'approved' | 'pending' | 'rejected';
-  articleId?: string;
-  discussionId?: string;
-  parentId?: string;
+  articleId?: number;
+  discussionId?: number;
+  parentId?: number;
   author: {
-    id: string;
+    id: number;
     username: string;
     avatar: string;
   };
@@ -106,9 +106,9 @@ export interface Comment {
 
 // 标签相关类型
 export interface Tag {
-  id: string;
+  id: number;
   name: string;
-  slug: string;
+  title?: string;
   description?: string;
   color?: string;
   articleCount: number;
@@ -118,20 +118,18 @@ export interface Tag {
 
 // 分类相关类型
 export interface Category {
-  id: string;
+  id: number;
   name: string;
-  slug: string;
+  path: string;
   description?: string;
-  parentId?: string;
   articleCount: number;
-  children?: Category[];
   createdAt: string;
   updatedAt: string;
 }
 
 // 友链相关类型
 export interface FriendLink {
-  id: string;
+  id: number;
   name: string;
   url: string;
   logo?: string;
@@ -144,7 +142,7 @@ export interface FriendLink {
 
 // 文件相关类型
 export interface FileItem {
-  id: string;
+  id: number;
   filename: string;
   originalName: string;
   mimeType: string;
@@ -157,8 +155,8 @@ export interface FileItem {
 
 // 访问统计类型
 export interface VisitRecord {
-  id: string;
-  articleId?: string;
+  id: number;
+  articleId?: number;
   articleTitle?: string;
   ip: string;
   userAgent: string;
@@ -230,8 +228,8 @@ export interface CreateArticleRequest {
   content: string;
   excerpt?: string;
   coverImage?: string;
-  categoryId: string;
-  tagIds: string[];
+  categoryId: number;
+  tagIds: number[];
   status: 'published' | 'draft';
   isOriginal: boolean;
   publishedAt?: string;
@@ -240,29 +238,28 @@ export interface CreateArticleRequest {
 export interface CreateDiscussionRequest {
   title: string;
   content: string;
-  tagIds: string[];
+  tagIds: number[];
   status: 'active' | 'inactive';
 }
 
 export interface CreateCommentRequest {
   content: string;
-  articleId?: string;
-  discussionId?: string;
-  parentId?: string;
+  articleId?: number;
+  discussionId?: number;
+  parentId?: number;
 }
 
 export interface CreateTagRequest {
   name: string;
-  slug: string;
+  title?: string;
   description?: string;
   color?: string;
 }
 
 export interface CreateCategoryRequest {
   name: string;
-  slug: string;
+  path: string;
   description?: string;
-  parentId?: string;
 }
 
 export interface CreateFriendLinkRequest {
@@ -296,8 +293,8 @@ export interface DiscussionQueryParams extends SearchParams {
 }
 
 export interface CommentQueryParams extends SearchParams {
-  articleId?: string;
-  discussionId?: string;
+  articleId?: number;
+  discussionId?: number;
   status?: 'approved' | 'pending' | 'rejected';
 }
 

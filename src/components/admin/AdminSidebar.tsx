@@ -15,6 +15,8 @@ import {
   FolderOpen,
   Folder
 } from 'lucide-react';
+import { useAuthStore } from '../../stores/authStore';
+import { resolveImageUrl } from '../../utils/apiHelpers';
 
 interface AdminSidebarProps {
   isOpen: boolean;
@@ -23,6 +25,7 @@ interface AdminSidebarProps {
 const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuthStore();
 
   const menuItems = [
     { icon: BarChart3, label: '面板', path: '/admin' },
@@ -73,7 +76,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen }) => {
         <div className="flex justify-center mb-3">
           <div className="avatar-container">
             <img 
-              src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=100" 
+              src={resolveImageUrl(user?.avatar)} 
               alt="Admin Avatar" 
               className="w-16 h-16 rounded-full object-cover avatar-image"
             />
@@ -81,11 +84,11 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen }) => {
         </div>
         
         <div className="text-center mb-2">
-          <h3 className="font-medium text-white">voocel</h3>
+          <h3 className="font-medium text-slate-100">{user?.username || 'Admin'}</h3>
         </div>
         
         <div className="text-center mb-4">
-          <p className="text-sm text-slate-300">admin@163.com</p>
+          <p className="text-sm text-slate-100">{user?.email || 'admin@example.com'}</p>
         </div>
         
         <div className="flex justify-center items-center space-x-6 text-slate-300">

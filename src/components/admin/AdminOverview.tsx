@@ -3,10 +3,10 @@ import { Users, Eye, FileText, MessageCircle } from 'lucide-react';
 
 const AdminOverview: React.FC = () => {
   const stats = {
-    users: 4670,
-    visits: 61329,
-    articles: 31,
-    comments: 2
+    users: 0,
+    visits: 0,
+    articles: 0,
+    comments: 0
   };
 
   return (

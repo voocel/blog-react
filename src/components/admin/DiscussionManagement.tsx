@@ -27,24 +27,7 @@ const DiscussionManagement: React.FC = () => {
     discussion: null
   });
 
-  const [discussions, setDiscussions] = useState<Discussion[]>([
-    {
-      id: 2,
-      username: 'Faye',
-      title: '斗地主是否与外观实际服务器?',
-      status: 'active',
-      createdAt: '2年前'
-    },
-    {
-      id: 1,
-      username: 'Ezhil',
-      title: 'Modular kitchen Chennai',
-      status: 'active',
-      createdAt: '7年前',
-      content: 'http://blueprintfordesigns.com/modular-kitchen-design-chennai.html',
-      category: 'cURL'
-    }
-  ]);
+  const [discussions, setDiscussions] = useState<Discussion[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
 

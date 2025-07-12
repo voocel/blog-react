@@ -9,81 +9,10 @@ interface VisitorRecord {
 }
 
 const VisitorStatistics: React.FC = () => {
-  const [visitors] = useState<VisitorRecord[]>([
-    {
-      id: 31601,
-      title: 'Golang 中的 gRPC 入门指南',
-      ip: '165.191.171.5',
-      visitCount: 1,
-      createdAt: '2024-09-12 23:52:06'
-    },
-    {
-      id: 31600,
-      title: '免费https证书生成',
-      ip: '165.191.171.7',
-      visitCount: 1,
-      createdAt: '2024-09-12 23:48:18'
-    },
-    {
-      id: 31599,
-      title: 'Golang实现硬编码',
-      ip: '220.243.191.67',
-      visitCount: 1,
-      createdAt: '2024-09-12 23:11:42'
-    },
-    {
-      id: 31598,
-      title: 'Golang实现硬编码',
-      ip: '39.129.5.11',
-      visitCount: 1,
-      createdAt: '2024-09-12 23:11:38'
-    },
-    {
-      id: 31597,
-      title: 'Golang实现硬编码',
-      ip: '14.145.220.128',
-      visitCount: 2,
-      createdAt: '2024-09-12 19:57:11'
-    },
-    {
-      id: 31596,
-      title: 'Gin中的中实现',
-      ip: '178.156.129.165',
-      visitCount: 1,
-      createdAt: '2024-09-12 19:33:08'
-    },
-    {
-      id: 31595,
-      title: 'Protobuf硬编码系列(一)',
-      ip: '66.249.79.131',
-      visitCount: 1,
-      createdAt: '2024-09-12 18:37:46'
-    },
-    {
-      id: 31594,
-      title: 'OpenAI的ChatGPT人工智能',
-      ip: '66.208.96.193',
-      visitCount: 1,
-      createdAt: '2024-09-12 17:12:16'
-    },
-    {
-      id: 31593,
-      title: 'MySQL数据库定时归档的几种Nginx日志切割',
-      ip: '66.249.79.132',
-      visitCount: 1,
-      createdAt: '2024-09-12 11:07:46'
-    },
-    {
-      id: 31592,
-      title: 'Golang prometheus metrics',
-      ip: '134.122.63.29',
-      visitCount: 1,
-      createdAt: '2024-09-12 10:43:16'
-    }
-  ]);
+  const [visitors] = useState<VisitorRecord[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 5;
+  const totalPages = Math.ceil(visitors.length / 10) || 1;
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

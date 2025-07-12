@@ -146,3 +146,17 @@ export function highlightSearchTerm(text: string, searchTerm: string): string {
   const regex = new RegExp(`(${searchTerm})`, 'gi');
   return text.replace(regex, '<mark>$1</mark>');
 }
+
+// 转换图片URL
+export function resolveImageUrl(url: string | null | undefined): string {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
+    return url;
+  }
+  
+  // 相对路径转换为完整URL
+  const baseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+  const apiUrl = baseUrl.replace('/api', '');
+  
+  return `${apiUrl}${url}`;
+}

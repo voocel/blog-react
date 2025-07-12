@@ -30,10 +30,22 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        // Simulate upload process
-        await new Promise(resolve => setTimeout(resolve, 500));
-        const mockUrl = `${currentPath}/${file.name}`;
-        urls.push(mockUrl);
+        // TODO: 替换为真实的文件上传逻辑
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('path', currentPath);
+        
+        const response = await fetch('/api/files/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error('上传失败');
+        }
+        
+        const result = await response.json();
+        urls.push(result.data.url);
       }
       
       setUploadedUrls(prev => [...prev, ...urls]);

@@ -1,23 +1,13 @@
 import React, { useState } from 'react';
-import { Eye, Edit, Trash2, Plus } from 'lucide-react';
+import { Eye, Edit, Trash2, Plus, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ConfirmDialog from '../ui/ConfirmDialog';
 import ArticleCreate from './ArticleCreate';
 import ArticleEdit from './ArticleEdit';
-
-interface Article {
-  id: number;
-  title: string;
-  subtitle: string;
-  publishTime: string;
-  category?: string;
-  coverImage?: string;
-  content?: string;
-  tags?: string[];
-  description?: string;
-  isDraft?: boolean;
-  isOriginal?: boolean;
-}
+import { ArticleService } from '../../services/articleService';
+import LoadingSpinner from '../ui/LoadingSpinner';
+import { useManagement } from '../../hooks/useManagement';
+import { Article } from '../../types/api';
 
 const ArticleManagement: React.FC = () => {
   const navigate = useNavigate();
@@ -31,88 +21,21 @@ const ArticleManagement: React.FC = () => {
     article: null
   });
 
-  const [articles, setArticles] = useState<Article[]>([
-    {
-      id: 31,
-      title: '如何使用Ollama本地部署运行大语言模型',
-      subtitle: 'Ollama 本地运行大模型',
-      publishTime: '4个月前',
-      category: 'AI',
-      coverImage: 'https://voocei.com/storage/cover/2024/09/01/AMXxNNaKSbYAGqx2Hu',
-      content: 'Ollama是一个强大的本地LLM部署工具...',
-      tags: ['Ollama', 'LLM'],
-      description: 'Ollama本地部署大语言模型的完整指南',
-      isDraft: false,
-      isOriginal: true
-    },
-    {
-      id: 30,
-      title: 'ComfyUI人工智能',
-      subtitle: 'ComfyUI基本使用',
-      publishTime: '1个月前',
-      category: 'AI',
-      coverImage: 'https://voocei.com/storage/cover/2024/09/01/AMXxNNaKSbYAGqx2Hu',
-      content: 'ComfyUI是基于节点流的界面...',
-      tags: ['ComfyUI', 'StableDiffusion'],
-      description: 'ComfyUI人工智能图像生成工具使用指南',
-      isDraft: false,
-      isOriginal: true
-    },
-    {
-      id: 29,
-      title: '用Golang实现一个轻量级的HTTP客户端',
-      subtitle: 'golang实现http client实持中间件方式',
-      publishTime: '5个月前'
-    },
-    {
-      id: 28,
-      title: 'OpenAI的ChatGPT人工智能',
-      subtitle: 'ChatGPT API接入门',
-      publishTime: '1年前'
-    },
-    {
-      id: 27,
-      title: '免费https证书生成',
-      subtitle: '使用acme.sh申请免费的https证书,自动化续签证书',
-      publishTime: '1年前'
-    },
-    {
-      id: 26,
-      title: 'Golang中的gRPC人工智能',
-      subtitle: '如何在go中使用grpc',
-      publishTime: '1年前'
-    },
-    {
-      id: 25,
-      title: 'Protobuf硬编码系列(一)',
-      subtitle: 'Protocol Buffer 入门指南：高效的数据序列化格式 - Base128 Varints',
-      publishTime: '1年前'
-    },
-    {
-      id: 24,
-      title: 'Golang优雅组织代码(Graceful Reader)',
-      subtitle: 'Golang中的优雅重启 (Graceful Restart)',
-      publishTime: '2年前'
-    },
-    {
-      id: 23,
-      title: '又一款数据新来源的Golang本套管理工具来了',
-      subtitle: 'Golang本套管理工具,Golang多版本管理神器',
-      publishTime: '2年前'
-    },
-    {
-      id: 22,
-      title: 'Golang prometheus metrics',
-      subtitle: 'Golang prometheus metrics',
-      publishTime: '3年前'
-    }
-  ]);
-
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const {
+    data: articles,
+    loading,
+    error,
+    currentPage,
+    totalPages,
+    deleteItem,
+    handlePageChange,
+    refreshData
+  } = useManagement<Article>({
+    fetchData: ArticleService.getArticles,
+    deleteData: ArticleService.deleteArticle,
+    errorMessage: '获取文章列表失败',
+    deleteErrorMessage: '删除文章失败'
+  });
 
   const handleCreateClick = () => {
     setCurrentView('create');
@@ -131,6 +54,7 @@ const ArticleManagement: React.FC = () => {
   const handleBackToList = () => {
     setCurrentView('list');
     setSelectedArticle(null);
+    refreshData();
   };
 
   const handleDeleteClick = (article: Article) => {
@@ -140,9 +64,9 @@ const ArticleManagement: React.FC = () => {
     });
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (deleteDialog.article) {
-      setArticles(articles.filter(article => article.id !== deleteDialog.article!.id));
+      await deleteItem(deleteDialog.article);
       setDeleteDialog({ isOpen: false, article: null });
     }
   };
@@ -175,6 +99,19 @@ const ArticleManagement: React.FC = () => {
         </button>
       </div>
 
+      {/* 错误提示 */}
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-600">{error}</p>
+          <button 
+            onClick={refreshData}
+            className="text-red-700 underline hover:no-underline mt-2"
+          >
+            重试
+          </button>
+        </div>
+      )}
+
       {/* Table */}
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <table className="w-full">
@@ -188,61 +125,83 @@ const ArticleManagement: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {articles.map((article) => (
-              <tr key={article.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {article.id}
+            {loading ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-12 text-center">
+                  <LoadingSpinner />
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-900">
-                  <div className="max-w-xs">
-                    {article.title}
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-600">
-                  <div className="max-w-md">
-                    {article.subtitle}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {article.publishTime}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div className="flex items-center space-x-2">
-                    <button 
-                      onClick={() => handleViewClick(article)}
-                      className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center hover:bg-green-600 transition-colors"
-                      title="查看文章"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </button>
-                    <button 
-                      onClick={() => handleEditClick(article)}
-                      className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
-                      title="编辑文章"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </button>
-                    <button 
-                      onClick={() => handleDeleteClick(article)}
-                      className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                      title="删除文章"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+              </tr>
+            ) : articles.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                  <div className="flex flex-col items-center space-y-2">
+                    <FileText className="w-12 h-12 text-gray-300" />
+                    <p>暂无文章数据</p>
+                    <p className="text-sm">点击上方"创建"按钮开始创建第一篇文章</p>
                   </div>
                 </td>
               </tr>
-            ))}
+            ) : (
+              articles.map((article) => (
+                <tr key={article.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {article.id}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    <div className="max-w-xs">
+                      {article.title}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">
+                    <div className="max-w-md">
+                      {article.subtitle}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {article.publishTime}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center space-x-2">
+                      <button 
+                        onClick={() => handleViewClick(article)}
+                        className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center hover:bg-green-600 transition-colors"
+                        title="查看文章"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => handleEditClick(article)}
+                        className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+                        title="编辑文章"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteClick(article)}
+                        className="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                        title="删除文章"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Pagination */}
       <div className="flex items-center justify-center space-x-2 mt-6">
-        <button className="w-8 h-8 rounded flex items-center justify-center text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
+        <button 
+          onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+          className="w-8 h-8 rounded flex items-center justify-center text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors disabled:text-gray-400 disabled:cursor-not-allowed"
+        >
           ←
         </button>
-        {[1, 2, 3, 4].map((page) => (
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
           <button
             key={page}
             onClick={() => handlePageChange(page)}
@@ -255,12 +214,15 @@ const ArticleManagement: React.FC = () => {
             {page}
           </button>
         ))}
-        <button className="w-8 h-8 rounded flex items-center justify-center text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
+        <button 
+          onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages}
+          className="w-8 h-8 rounded flex items-center justify-center text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors disabled:text-gray-400 disabled:cursor-not-allowed"
+        >
           →
         </button>
       </div>
 
-      {/* Delete Confirmation Dialog */}
       <ConfirmDialog
         isOpen={deleteDialog.isOpen}
         title="删除文章"

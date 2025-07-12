@@ -23,7 +23,7 @@ export class ArticleService {
   }
 
   // 获取文章详情
-  static async getArticle(id: string): Promise<Article> {
+  static async getArticle(id: number): Promise<Article> {
     return ApiService.get<Article>(`/articles/${id}`);
   }
 
@@ -33,12 +33,12 @@ export class ArticleService {
   }
 
   // 更新文章
-  static async updateArticle(id: string, data: Partial<CreateArticleRequest>): Promise<Article> {
+  static async updateArticle(id: number, data: Partial<CreateArticleRequest>): Promise<Article> {
     return ApiService.put<Article>(`/articles/${id}`, data);
   }
 
   // 删除文章
-  static async deleteArticle(id: string): Promise<void> {
+  static async deleteArticle(id: number): Promise<void> {
     return ApiService.delete<void>(`/articles/${id}`);
   }
 
@@ -48,7 +48,7 @@ export class ArticleService {
   }
 
   // 获取相关文章
-  static async getRelatedArticles(id: string, limit = 5): Promise<Article[]> {
+  static async getRelatedArticles(id: number, limit = 5): Promise<Article[]> {
     return ApiService.get<Article[]>(`/articles/${id}/related?limit=${limit}`);
   }
 }

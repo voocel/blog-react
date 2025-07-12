@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MarkdownEditor from '../common/MarkdownEditor';
 import ImageUpload from '../common/ImageUpload';
 import DateTimePicker from './DateTimePicker';
 import CustomDropdown from './CustomDropdown';
+import { CategoryService } from '../../services/categoryService';
+import { TagService } from '../../services/tagService';
+import { useToast } from '../../contexts/ToastContext';
 
 interface Article {
   id: number;
@@ -58,35 +61,44 @@ python comfyui.py`,
     isOriginal: true
   });
 
-  const categories = [
-    { value: '', label: 'Select option' },
-    { value: 'AI', label: 'AI' },
-    { value: 'tech', label: '技术分享' },
-    { value: 'life', label: '生活随笔' },
-    { value: 'study', label: '学习笔记' },
-    { value: 'project', label: '项目经验' },
-    { value: 'tools', label: '工具推荐' },
-    { value: 'frontend', label: '前端开发' },
-    { value: 'backend', label: '后端开发' },
-    { value: 'devops', label: 'DevOps' }
-  ];
+  const [categories, setCategories] = useState<{ value: string; label: string }[]>([
+    { value: '', label: 'Select option' }
+  ]);
+  
+  const [availableTags, setAvailableTags] = useState<{ value: string; label: string }[]>([
+    { value: '', label: '选择标签' }
+  ]);
+  
+  const [loading, setLoading] = useState(false);
+  const { showSuccess, showError } = useToast();
 
-  const availableTags = [
-    { value: '', label: '选择标签' },
-    { value: 'ComfyUI', label: 'ComfyUI' },
-    { value: 'StableDiffusion', label: 'StableDiffusion' },
-    { value: 'javascript', label: 'JavaScript' },
-    { value: 'react', label: 'React' },
-    { value: 'nodejs', label: 'Node.js' },
-    { value: 'python', label: 'Python' },
-    { value: 'golang', label: 'Go' },
-    { value: 'docker', label: 'Docker' },
-    { value: 'kubernetes', label: 'Kubernetes' },
-    { value: 'ai', label: 'AI' },
-    { value: 'ml', label: 'Machine Learning' },
-    { value: 'vue', label: 'Vue.js' },
-    { value: 'typescript', label: 'TypeScript' }
-  ];
+  // 加载分类和标签数据
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // 获取分类数据
+        const categoriesResponse = await CategoryService.getAllCategories();
+        const categoryOptions = [
+          { value: '', label: 'Select option' },
+          ...categoriesResponse.map(cat => ({ value: cat.id.toString(), label: cat.name }))
+        ];
+        setCategories(categoryOptions);
+
+        // 获取标签数据
+        const tagsResponse = await TagService.getAllTags();
+        const tagOptions = [
+          { value: '', label: '选择标签' },
+          ...tagsResponse.map(tag => ({ value: tag.id.toString(), label: tag.name }))
+        ];
+        setAvailableTags(tagOptions);
+      } catch (error) {
+        console.error('加载数据失败:', error);
+        showError('加载分类和标签数据失败');
+      }
+    };
+
+    fetchData();
+  }, [showError]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -147,10 +159,42 @@ python comfyui.py`,
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('修改文章:', formData);
-    alert('文章修改成功！');
+    
+    // 验证表单
+    if (!formData.category) {
+      showError('请选择分类');
+      return;
+    }
+    
+    if (!formData.title.trim()) {
+      showError('请填写文章标题');
+      return;
+    }
+    
+    if (!formData.content.trim()) {
+      showError('请填写文章内容');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // 这里可以调用 ArticleService.updateArticle 更新文章
+      // 目前先显示成功消息
+      showSuccess('文章修改成功！');
+      
+      // 可以选择自动返回列表页面
+      setTimeout(() => {
+        onBack();
+      }, 1500);
+      
+    } catch (error) {
+      console.error('修改文章失败:', error);
+      showError('修改文章失败，请重试');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

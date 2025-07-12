@@ -64,8 +64,9 @@ body {
   color: #4b5563; /* 将默认文字颜色从黑色改为柔和的灰色 */
 }
 
-/* 标题颜色优化 */
-h1, h2, h3, h4, h5, h6 {
+/* 标题颜色优化 - 只影响普通内容区域 */
+.bg-white h1, .bg-white h2, .bg-white h3, .bg-white h4, .bg-white h5, .bg-white h6,
+.bg-gray-50 h1, .bg-gray-50 h2, .bg-gray-50 h3, .bg-gray-50 h4, .bg-gray-50 h5, .bg-gray-50 h6 {
   color: #374151; /* 标题使用稍深一点的灰色 */
 }
 
@@ -163,8 +164,9 @@ nav a:hover {
   color: #d1d5db !important;
 }
 
-/* 确保重要信息仍然清晰可见 */
-.font-bold, .font-semibold, .font-medium {
+/* 确保重要信息仍然清晰可见 - 只影响普通内容区域 */
+.bg-white .font-bold, .bg-white .font-semibold, .bg-white .font-medium,
+.bg-gray-50 .font-bold, .bg-gray-50 .font-semibold, .bg-gray-50 .font-medium {
   color: #374151 !important;
 }
 
@@ -206,4 +208,35 @@ header .text-gray-300 {
 
 .read-more-button:hover {
   color: #059669 !important; /* 悬停时稍深一点的绿色 */
+}
+
+/* Toast动画效果 */
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-slide-out {
+  animation: slideOut 0.3s ease-in;
 }
