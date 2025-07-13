@@ -11,6 +11,7 @@ interface FileItem {
   mimeType?: string;
   createdAt?: string;
   path: string;
+  url?: string;
 }
 
 interface CreateFolderModalProps {
@@ -186,8 +187,7 @@ const FileManagement: React.FC = () => {
   };
 
   const handleImagePreview = (file: FileItem) => {
-    // 模拟图片URL
-    const imageUrl = `https://images.pexels.com/photos/270348/pexels-photo-270348.jpeg?auto=compress&cs=tinysrgb&w=800`;
+    const imageUrl = file.url || file.path;
     setPreviewImage({
       isOpen: true,
       url: imageUrl,

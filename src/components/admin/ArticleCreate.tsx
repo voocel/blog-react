@@ -145,8 +145,22 @@ const ArticleCreate: React.FC<ArticleCreateProps> = ({ onBack }) => {
 
     setLoading(true);
     try {
-      // 这里可以调用 ArticleService.createArticle 创建文章
-      // 目前先显示成功消息
+      const { ArticleService } = await import('../../services/articleService');
+      
+      const articleData = {
+        title: formData.title,
+        subtitle: formData.subtitle,
+        content: formData.content,
+        excerpt: formData.description || formData.content.substring(0, 200),
+        coverImage: formData.coverImage,
+        categoryId: parseInt(formData.category),
+        tagIds: formData.tags.map(tag => parseInt(tag)),
+        status: formData.isDraft ? 'draft' as const : 'published' as const,
+        isOriginal: formData.isOriginal,
+        publishedAt: formData.publishTime !== 'Published At?' ? formData.publishTime : undefined
+      };
+
+      await ArticleService.createArticle(articleData);
       showSuccess('文章创建成功！');
       
       // 重置表单
@@ -163,7 +177,7 @@ const ArticleCreate: React.FC<ArticleCreateProps> = ({ onBack }) => {
         isOriginal: false
       });
       
-      // 可以选择自动返回列表页面
+      // 返回列表页面
       setTimeout(() => {
         onBack();
       }, 1500);

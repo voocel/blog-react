@@ -3,14 +3,10 @@ import { Edit, Trash2, Plus, Tag as TagIcon } from 'lucide-react';
 import TagCreate from './TagCreate';
 import TagEdit from './TagEdit';
 import ConfirmDialog from '../ui/ConfirmDialog';
-
-interface Tag {
-  id: number;
-  name: string;
-  slug: string;
-  description: string;
-  createdAt: string;
-}
+import LoadingSpinner from '../ui/LoadingSpinner';
+import { Tag } from '../../types/api';
+import { TagService } from '../../services/tagService';
+import { useManagement } from '../../hooks/useManagement';
 
 const TagManagement: React.FC = () => {
   const [currentView, setCurrentView] = useState<'list' | 'create' | 'edit'>('list');
@@ -23,14 +19,21 @@ const TagManagement: React.FC = () => {
     tag: null
   });
 
-  const [tags, setTags] = useState<Tag[]>([]);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(tags.length / 10) || 1;
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const {
+    data: tags,
+    loading,
+    error,
+    currentPage,
+    totalPages,
+    deleteItem,
+    handlePageChange,
+    refreshData
+  } = useManagement<Tag>({
+    fetchData: TagService.getTags,
+    deleteData: TagService.deleteTag,
+    errorMessage: '获取标签列表失败',
+    deleteErrorMessage: '删除标签失败'
+  });
 
   const handleCreateClick = () => {
     setCurrentView('create');
@@ -44,6 +47,7 @@ const TagManagement: React.FC = () => {
   const handleBackToList = () => {
     setCurrentView('list');
     setSelectedTag(null);
+    refreshData();
   };
 
   const handleDeleteClick = (tag: Tag) => {
@@ -53,9 +57,9 @@ const TagManagement: React.FC = () => {
     });
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (deleteDialog.tag) {
-      setTags(tags.filter(tag => tag.id !== deleteDialog.tag!.id));
+      await deleteItem(deleteDialog.tag);
       setDeleteDialog({ isOpen: false, tag: null });
     }
   };

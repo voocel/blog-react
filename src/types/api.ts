@@ -167,22 +167,10 @@ export interface VisitRecord {
 
 // 仪表盘统计类型
 export interface DashboardStats {
-  users: {
-    total: number;
-    growth: number;
-  };
-  articles: {
-    total: number;
-    growth: number;
-  };
-  comments: {
-    total: number;
-    growth: number;
-  };
-  visits: {
-    total: number;
-    growth: number;
-  };
+  users: number;
+  articles: number;
+  comments: number;
+  visits: number;
 }
 
 // 系统信息类型

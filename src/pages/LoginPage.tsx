@@ -10,8 +10,8 @@ const LoginPage: React.FC = () => {
   const { login } = useAuth();
   
   const [formData, setFormData] = useState({
-    email: 'admin@163.com',
-    password: 'admin123',
+    email: 'admin@gmail.com',
+    password: '123456',
     rememberMe: false
   });
   const [error, setError] = useState('');
@@ -115,11 +115,11 @@ const LoginPage: React.FC = () => {
             <div className="space-y-2">
               <button
                 type="button"
-                onClick={() => handleQuickLogin('admin@163.com', 'admin123')}
+                onClick={() => handleQuickLogin('admin@gmail.com', '123456')}
                 className="w-full text-left p-2 rounded bg-green-100 hover:bg-green-200 transition-colors"
               >
                 <div className="text-xs text-green-700">
-                  <strong>👑 管理员:</strong> admin@163.com / admin123
+                  <strong>👑 管理员:</strong> admin@gmail.com / 123456
                 </div>
               </button>
               <button

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { User, Clock, MessageCircle, Tag } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import { formatUsername } from '../utils/apiHelpers';
 
 const DiscussionDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -67,7 +68,7 @@ const DiscussionDetail: React.FC = () => {
             <div className="flex items-center space-x-6 text-sm text-slate-300">
               <div className="flex items-center space-x-1">
                 <User className="w-4 h-4" />
-                <span className="username">{discussion.author}</span>
+                <span className="username">{formatUsername(discussion.author)}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Tag className="w-4 h-4" />
@@ -103,7 +104,7 @@ const DiscussionDetail: React.FC = () => {
               />
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
-                  <h3 className="font-medium text-gray-700 username">{discussion.author}</h3>
+                  <h3 className="font-medium text-gray-700 username">{formatUsername(discussion.author)}</h3>
                   <span className="text-sm text-gray-500">{discussion.timeAgo}</span>
                 </div>
                 <div className="prose max-w-none">
@@ -129,7 +130,7 @@ const DiscussionDetail: React.FC = () => {
                   />
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-2">
-                      <h4 className="font-medium text-gray-700 username">{reply.author}</h4>
+                      <h4 className="font-medium text-gray-700 username">{formatUsername(reply.author)}</h4>
                       <span className="text-sm text-gray-500">{reply.timeAgo}</span>
                     </div>
                     <p className="text-gray-600">{reply.content}</p>

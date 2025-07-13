@@ -180,11 +180,24 @@ python comfyui.py`,
 
     setLoading(true);
     try {
-      // 这里可以调用 ArticleService.updateArticle 更新文章
-      // 目前先显示成功消息
-      showSuccess('文章修改成功！');
+      const { ArticleService } = await import('../../services/articleService');
       
-      // 可以选择自动返回列表页面
+      const articleData = {
+        title: formData.title,
+        subtitle: formData.subtitle,
+        content: formData.content,
+        excerpt: formData.description || formData.content.substring(0, 200),
+        coverImage: formData.coverImage,
+        categoryId: parseInt(formData.category),
+        tagIds: formData.tags.map(tag => parseInt(tag)),
+        status: formData.isDraft ? 'draft' as const : 'published' as const,
+        isOriginal: formData.isOriginal,
+        publishedAt: formData.publishTime !== 'Published At?' ? formData.publishTime : undefined
+      };
+
+      await ArticleService.updateArticle(article.id, articleData);
+      showSuccess('文章修改成功！');
+
       setTimeout(() => {
         onBack();
       }, 1500);

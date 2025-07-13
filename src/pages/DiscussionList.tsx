@@ -5,6 +5,7 @@ import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import HeroSection from '../components/layout/HeroSection';
 import Pagination from '../components/common/Pagination';
+import { formatUsername } from '../utils/apiHelpers';
 
 interface Discussion {
   id: number;
@@ -119,7 +120,7 @@ const DiscussionList: React.FC = () => {
                       <div className="flex items-center space-x-4">
                         <div className="flex items-center space-x-1">
                           <User className="w-3 h-3" />
-                          <span className="username">{discussion.author}</span>
+                          <span className="username">{formatUsername(discussion.author)}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Clock className="w-3 h-3" />

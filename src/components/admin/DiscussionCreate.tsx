@@ -65,10 +65,41 @@ const DiscussionCreate: React.FC<DiscussionCreateProps> = ({ onBack }) => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('创建讨论:', formData);
-    alert('讨论创建成功！');
+    
+    // 验证表单
+    if (!formData.title.trim()) {
+      alert('请填写讨论标题');
+      return;
+    }
+    
+    if (!formData.content.trim()) {
+      alert('请填写讨论内容');
+      return;
+    }
+
+    try {
+      const { DiscussionService } = await import('../../services/discussionService');
+      
+      const discussionData = {
+        title: formData.title,
+        content: formData.content,
+        tagIds: formData.tags.map(tag => parseInt(tag)),
+        status: formData.status ? 'active' as const : 'inactive' as const
+      };
+
+      await DiscussionService.createDiscussion(discussionData);
+      alert('讨论创建成功！');
+
+      setTimeout(() => {
+        onBack();
+      }, 1000);
+      
+    } catch (error) {
+      console.error('创建讨论失败:', error);
+      alert('创建讨论失败，请重试');
+    }
   };
 
   return (

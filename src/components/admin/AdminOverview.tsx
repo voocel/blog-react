@@ -1,13 +1,10 @@
 import React from 'react';
 import { Users, Eye, FileText, MessageCircle } from 'lucide-react';
+import { useStatistics } from '../../hooks/useStatistics';
+import LoadingSpinner from '../ui/LoadingSpinner';
 
 const AdminOverview: React.FC = () => {
-  const stats = {
-    users: 0,
-    visits: 0,
-    articles: 0,
-    comments: 0
-  };
+  const { stats, loading, error } = useStatistics();
 
   return (
     <main className="p-6">
@@ -20,6 +17,13 @@ const AdminOverview: React.FC = () => {
           </span>
         </div>
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+          {error}
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -36,7 +40,7 @@ const AdminOverview: React.FC = () => {
             </div>
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            {stats.users.toLocaleString()}
+            {loading ? <LoadingSpinner size="sm" /> : (stats?.users || 0).toLocaleString()}
           </div>
         </div>
 
@@ -53,7 +57,7 @@ const AdminOverview: React.FC = () => {
             </div>
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            {stats.visits.toLocaleString()}
+            {loading ? <LoadingSpinner size="sm" /> : (stats?.visits || 0).toLocaleString()}
           </div>
         </div>
 
@@ -70,7 +74,7 @@ const AdminOverview: React.FC = () => {
             </div>
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            {stats.articles}
+            {loading ? <LoadingSpinner size="sm" /> : (stats?.articles || 0).toLocaleString()}
           </div>
         </div>
 
@@ -87,7 +91,7 @@ const AdminOverview: React.FC = () => {
             </div>
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            {stats.comments}
+            {loading ? <LoadingSpinner size="sm" /> : (stats?.comments || 0).toLocaleString()}
           </div>
         </div>
       </div>

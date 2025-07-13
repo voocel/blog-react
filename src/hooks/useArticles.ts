@@ -15,11 +15,11 @@ export const useArticles = (params?: any) => {
 // 获取单个文章的hook
 export const useArticle = (id: string) => {
   const apiFunction = useCallback(
-    () => ArticleService.getArticle(id),
+    () => ArticleService.getArticle(parseInt(id)),
     [id]
   );
   
-  return useApi(apiFunction, { immediate: !!id });
+  return useApi(apiFunction, { immediate: !!id && !isNaN(parseInt(id)) });
 };
 
 // 获取热门文章的hook
@@ -35,9 +35,9 @@ export const usePopularArticles = (limit = 10) => {
 // 获取相关文章的hook
 export const useRelatedArticles = (articleId: string, limit = 5) => {
   const apiFunction = useCallback(
-    () => ArticleService.getRelatedArticles(articleId, limit),
+    () => ArticleService.getRelatedArticles(parseInt(articleId), limit),
     [articleId, limit]
   );
   
-  return useApi(apiFunction, { immediate: !!articleId });
+  return useApi(apiFunction, { immediate: !!articleId && !isNaN(parseInt(articleId)) });
 }; 

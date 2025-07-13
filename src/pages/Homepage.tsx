@@ -11,6 +11,7 @@ import { usePageEngagement } from '../hooks/useAnalytics';
 import { trackArticleView } from '../utils/analytics';
 import { useArticles } from '../hooks/useArticles';
 import { Article } from '../types/api';
+import { formatUsername } from '../utils/apiHelpers';
 
 const Homepage: React.FC = () => {
   const navigate = useNavigate();
@@ -135,7 +136,9 @@ const Homepage: React.FC = () => {
                           <div className="flex items-center space-x-4">
                             <div className="flex items-center space-x-1">
                               <User className="w-3 h-3" />
-                              <span className="username">{article.author?.username || 'Anonymous'}</span>
+                              <span className="username">
+                                {formatUsername(article.author?.username)}
+                              </span>
                             </div>
                             <div className="flex items-center space-x-1">
                               <Clock className="w-3 h-3" />

@@ -4,16 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import DiscussionCreate from './DiscussionCreate';
 import DiscussionEdit from './DiscussionEdit';
 import ConfirmDialog from '../ui/ConfirmDialog';
+import LoadingSpinner from '../ui/LoadingSpinner';
+import { Discussion } from '../../types/api';
+import { DiscussionService } from '../../services/discussionService';
+import { useManagement } from '../../hooks/useManagement';
 
-interface Discussion {
-  id: number;
-  username: string;
-  title: string;
-  status: 'active' | 'inactive';
-  createdAt: string;
-  content?: string;
-  category?: string;
-}
+
 
 const DiscussionManagement: React.FC = () => {
   const navigate = useNavigate();
@@ -27,13 +23,21 @@ const DiscussionManagement: React.FC = () => {
     discussion: null
   });
 
-  const [discussions, setDiscussions] = useState<Discussion[]>([]);
-
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const {
+    data: discussions,
+    loading,
+    error,
+    currentPage,
+    totalPages,
+    deleteItem,
+    handlePageChange,
+    refreshData
+  } = useManagement<Discussion>({
+    fetchData: DiscussionService.getDiscussions,
+    deleteData: DiscussionService.deleteDiscussion,
+    errorMessage: '获取讨论列表失败',
+    deleteErrorMessage: '删除讨论失败'
+  });
 
   const handleCreateClick = () => {
     setCurrentView('create');
@@ -52,6 +56,7 @@ const DiscussionManagement: React.FC = () => {
   const handleBackToList = () => {
     setCurrentView('list');
     setSelectedDiscussion(null);
+    refreshData();
   };
 
   const handleDeleteClick = (discussion: Discussion) => {
@@ -61,9 +66,9 @@ const DiscussionManagement: React.FC = () => {
     });
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (deleteDialog.discussion) {
-      setDiscussions(discussions.filter(discussion => discussion.id !== deleteDialog.discussion!.id));
+      await deleteItem(deleteDialog.discussion);
       setDeleteDialog({ isOpen: false, discussion: null });
     }
   };

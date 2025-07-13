@@ -3,16 +3,10 @@ import { Edit, Trash2, Plus } from 'lucide-react';
 import FriendLinkCreate from './FriendLinkCreate';
 import FriendLinkEdit from './FriendLinkEdit';
 import ConfirmDialog from '../ui/ConfirmDialog';
-
-interface FriendLink {
-  id: number;
-  name: string;
-  url: string;
-  logo: string;
-  isActive: boolean;
-  createdAt: string;
-  description?: string;
-}
+import LoadingSpinner from '../ui/LoadingSpinner';
+import { FriendLink } from '../../types/api';
+import { FriendLinkService } from '../../services/friendLinkService';
+import { useManagement } from '../../hooks/useManagement';
 
 const FriendLinkManagement: React.FC = () => {
   const [currentView, setCurrentView] = useState<'list' | 'create' | 'edit'>('list');
@@ -25,13 +19,21 @@ const FriendLinkManagement: React.FC = () => {
     friendLink: null
   });
 
-  const [friendLinks, setFriendLinks] = useState<FriendLink[]>([]);
-
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const {
+    data: friendLinks,
+    loading,
+    error,
+    currentPage,
+    totalPages,
+    deleteItem,
+    handlePageChange,
+    refreshData
+  } = useManagement<FriendLink>({
+    fetchData: FriendLinkService.getFriendLinks,
+    deleteData: FriendLinkService.deleteFriendLink,
+    errorMessage: '获取友链列表失败',
+    deleteErrorMessage: '删除友链失败'
+  });
 
   const handleCreateClick = () => {
     setCurrentView('create');
@@ -45,6 +47,7 @@ const FriendLinkManagement: React.FC = () => {
   const handleBackToList = () => {
     setCurrentView('list');
     setSelectedFriendLink(null);
+    refreshData();
   };
 
   const handleDeleteClick = (friendLink: FriendLink) => {
@@ -54,9 +57,9 @@ const FriendLinkManagement: React.FC = () => {
     });
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (deleteDialog.friendLink) {
-      setFriendLinks(friendLinks.filter(friendLink => friendLink.id !== deleteDialog.friendLink!.id));
+      await deleteItem(deleteDialog.friendLink);
       setDeleteDialog({ isOpen: false, friendLink: null });
     }
   };

@@ -66,7 +66,7 @@ export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout;
+  let timeout: number;
   
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
@@ -159,4 +159,12 @@ export function resolveImageUrl(url: string | null | undefined): string {
   const apiUrl = baseUrl.replace('/api', '');
   
   return `${apiUrl}${url}`;
+}
+
+// 格式化用户名显示
+export function formatUsername(username: string | null | undefined): string {
+  if (!username || username.toLowerCase() === 'anonymous') {
+    return 'Anonymous';
+  }
+  return username;
 }
