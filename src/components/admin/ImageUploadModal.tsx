@@ -1,176 +1,134 @@
 import React, { useState } from 'react';
-import { X, Upload } from 'lucide-react';
-import ImageUpload from '../common/ImageUpload';
+import { X, Upload, Trash2 } from 'lucide-react';
 
 interface ImageUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpload: (urls: string[]) => void;
-  currentPath: string;
+  onUpload: (files: File[]) => void;
 }
 
 const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ 
   isOpen, 
   onClose, 
-  onUpload, 
-  currentPath 
+  onUpload
 }) => {
-  const [uploadedUrls, setUploadedUrls] = useState<string[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   if (!isOpen) return null;
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
-    setIsUploading(true);
-    const urls: string[] = [];
-
-    try {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        // TODO: 替换为真实的文件上传逻辑
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('path', currentPath);
-        
-        const response = await fetch('/api/files/upload', {
-          method: 'POST',
-          body: formData,
-        });
-        
-        if (!response.ok) {
-          throw new Error('上传失败');
-        }
-        
-        const result = await response.json();
-        urls.push(result.data.url);
-      }
-      
-      setUploadedUrls(prev => [...prev, ...urls]);
-    } catch (error) {
-      console.error('Upload failed:', error);
-    } finally {
-      setIsUploading(false);
-    }
+    const fileArray = Array.from(files);
+    setSelectedFiles(prev => [...prev, ...fileArray]);
   };
 
   const handleConfirmUpload = () => {
-    onUpload(uploadedUrls);
-    setUploadedUrls([]);
-    onClose();
+    if (selectedFiles.length > 0) {
+      onUpload(selectedFiles);
+      setSelectedFiles([]);
+      onClose();
+    }
   };
 
   const handleCancel = () => {
-    setUploadedUrls([]);
+    setSelectedFiles([]);
     onClose();
   };
 
-  const removeUploadedFile = (index: number) => {
-    setUploadedUrls(prev => prev.filter((_, i) => i !== index));
+  const removeFile = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+      <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-auto">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-semibold text-gray-900">
-            上传图片到 {currentPath}
-          </h3>
-          <button 
-            onClick={handleCancel}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
+          <h3 className="text-lg font-medium text-gray-900">上传文件</h3>
+          <button onClick={handleCancel} className="text-gray-400 hover:text-gray-600">
             <X className="w-6 h-6" />
           </button>
         </div>
-        
+
+        {/* File Input */}
         <div className="mb-6">
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
-            <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 mb-4">点击选择文件或拖拽文件到此处</p>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleFileSelect}
-              className="hidden"
-              id="file-upload"
-              disabled={isUploading}
-            />
-            <label
-              htmlFor="file-upload"
-              className={`inline-flex items-center px-4 py-2 rounded-md text-white cursor-pointer transition-colors ${
-                isUploading 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-blue-500 hover:bg-blue-600'
-              }`}
-            >
-              {isUploading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                  上传中...
-                </>
-              ) : (
-                <>
-                  <Upload className="w-4 h-4 mr-2" />
-                  选择文件
-                </>
-              )}
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            选择文件
+          </label>
+          <div className="flex items-center justify-center w-full">
+            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                <Upload className="w-8 h-8 mb-4 text-gray-500" />
+                <p className="mb-2 text-sm text-gray-500">
+                  <span className="font-semibold">点击上传</span> 或拖拽文件到此处
+                </p>
+                <p className="text-xs text-gray-500">支持 PNG, JPG, GIF 等格式</p>
+              </div>
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
             </label>
           </div>
         </div>
 
-        {uploadedUrls.length > 0 && (
+        {/* Selected Files List */}
+        {selectedFiles.length > 0 && (
           <div className="mb-6">
-            <h4 className="text-lg font-medium text-gray-900 mb-3">已上传的文件</h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {uploadedUrls.map((url, index) => (
-                <div key={index} className="relative group">
-                  <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                    <img
-                      src={url}
-                      alt={`上传的图片 ${index + 1}`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQgMTZMMTAuNTg2IDkuNDE0QTIgMiAwIDAxMTMuNDE0IDkuNDE0TDE2IDEyTTE4IDEwTDE5LjU4NiA4LjQxNEEyIDIgMCAwMTIyLjQxNCA4LjQxNEwyNCAyTTYgMjBIMThBMiAyIDAgMDAyMCAxOFY2QTIgMiAwIDAwMTggNEg2QTIgMiAwIDAwNCA2VjE4QTIgMiAwIDAwNiAyMFoiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K';
-                      }}
-                    />
+            <h4 className="text-sm font-medium text-gray-700 mb-3">
+              已选择文件 ({selectedFiles.length})
+            </h4>
+            <div className="space-y-2 max-h-60 overflow-auto">
+              {selectedFiles.map((file, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Upload className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{file.name}</p>
+                      <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
+                    </div>
                   </div>
                   <button
-                    onClick={() => removeUploadedFile(index)}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => removeFile(index)}
+                    className="text-red-500 hover:text-red-700 p-1"
+                    title="移除文件"
                   >
-                    <X className="w-4 h-4" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
-                  <p className="mt-2 text-sm text-gray-600 truncate">
-                    {url.split('/').pop()}
-                  </p>
                 </div>
               ))}
             </div>
           </div>
         )}
-        
+
+        {/* Action Buttons */}
         <div className="flex justify-end space-x-3">
           <button
             onClick={handleCancel}
-            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
           >
             取消
           </button>
           <button
             onClick={handleConfirmUpload}
-            disabled={uploadedUrls.length === 0 || isUploading}
-            className={`px-4 py-2 rounded-md transition-colors ${
-              uploadedUrls.length === 0 || isUploading
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-500 text-white hover:bg-blue-600'
-            }`}
+            disabled={selectedFiles.length === 0}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
           >
-            确认上传 ({uploadedUrls.length})
+            上传 {selectedFiles.length > 0 && `(${selectedFiles.length})`}
           </button>
         </div>
       </div>

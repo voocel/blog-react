@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { PaginatedResponse } from '../types/api';
+import { PaginatedResponse, FileItem } from '../types/api';
+import { FileService } from '../services/fileService';
 
 interface UseManagementOptions<T> {
   fetchData: (params: { page: number; pageSize: number }) => Promise<PaginatedResponse<T>>;
@@ -76,5 +77,117 @@ export function useManagement<T extends { id: number | string }>(
     deleteItem,
     handlePageChange,
     refreshData
+  };
+}
+
+export function useFileManagement(initialPath: string = 'root') {
+  const [currentPath, setCurrentPath] = useState(initialPath);
+  const [files, setFiles] = useState<FileItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+
+  // 标准化路径：将反斜杠转换为正斜杠
+  const normalizePath = useCallback((path: string): string => {
+    return path.replace(/\\/g, '/');
+  }, []);
+
+  // 获取当前目录下的文件列表
+  const getCurrentFiles = useCallback(() => {
+    const normalizedCurrentPath = normalizePath(currentPath);
+    
+    return files.filter(file => {
+      const normalizedFilePath = normalizePath(file.path || '');
+      
+      // 计算父目录路径
+      const pathParts = normalizedFilePath.split('/');
+      const parentPath = pathParts.slice(0, -1).join('/');
+      
+      // 检查父目录是否与当前路径匹配
+      return parentPath === normalizedCurrentPath;
+    });
+  }, [files, currentPath, normalizePath]);
+
+  // 获取文件列表
+  const fetchFiles = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await FileService.getFiles({
+        path: currentPath,
+        page: 1,
+        pageSize: 100
+      });
+      setFiles(response.items);
+    } catch (error) {
+      console.error('获取文件列表失败:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPath]);
+
+  // 上传文件
+  const uploadFiles = useCallback(async (filesToUpload: File[]) => {
+    setUploading(true);
+    try {
+      const uploadPromises = filesToUpload.map(file => 
+        FileService.uploadFile(file, currentPath)
+      );
+      
+      await Promise.all(uploadPromises);
+      await fetchFiles(); // 重新获取文件列表
+      return filesToUpload.length;
+    } catch (error) {
+      console.error('文件上传失败:', error);
+      throw error;
+    } finally {
+      setUploading(false);
+    }
+  }, [currentPath, fetchFiles]);
+
+  // 删除文件
+  const deleteFile = useCallback(async (fileId: number) => {
+    try {
+      await FileService.deleteFile(fileId);
+      await fetchFiles(); // 重新获取文件列表
+    } catch (error) {
+      console.error('删除文件失败:', error);
+      throw error;
+    }
+  }, [fetchFiles]);
+
+  // 创建文件夹
+  const createFolder = useCallback(async (folderName: string) => {
+    try {
+      await FileService.createFolder({
+        name: folderName,
+        path: currentPath
+      });
+      await fetchFiles(); // 重新获取文件列表
+    } catch (error) {
+      console.error('创建文件夹失败:', error);
+      throw error;
+    }
+  }, [currentPath, fetchFiles]);
+
+  // 路径变化时重新获取文件
+  useEffect(() => {
+    fetchFiles();
+  }, [fetchFiles]);
+
+  const currentFiles = getCurrentFiles();
+
+  return {
+    // 状态
+    currentPath,
+    files: currentFiles,
+    loading,
+    uploading,
+
+    // 操作
+    setCurrentPath,
+    uploadFiles,
+    deleteFile,
+    createFolder,
+    refreshFiles: fetchFiles,
   };
 } 
